@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import styles from "./Designer.module.css";
 import { Mode, NumItems } from "./types";
-import { SwitchCard } from "./switch/SwitchCard";
+import { RootSwitch } from "./switch/RootSwitch";
 
 type Props = {};
 
@@ -35,21 +35,21 @@ export function Designer(props: Props) {
       case "3":
         setNumItems("3");
         break;
-      case "4":
-        setNumItems("4");
-        break;
-      case "5":
-        setNumItems("5");
-        break;
-      case "6":
-        setNumItems("6");
-        break;
-      case "7":
-        setNumItems("7");
-        break;
-      case "8":
-        setNumItems("8");
-        break;
+      // case "4":
+      //   setNumItems("4");
+      //   break;
+      // case "5":
+      //   setNumItems("5");
+      //   break;
+      // case "6":
+      //   setNumItems("6");
+      //   break;
+      // case "7":
+      //   setNumItems("7");
+      //   break;
+      // case "8":
+      //   setNumItems("8");
+      // break;
       default:
         break;
     }
@@ -65,7 +65,7 @@ export function Designer(props: Props) {
 
   return (
     <div className={styles.component + " " + styleSizing}>
-      <SwitchCard mode={mode} numItems={numItems} />
+      <RootSwitch mode={mode} numItems={numItems} />
     </div>
   );
 }

@@ -6,6 +6,7 @@ export function Card(props: Props) {
   return (
     <div className={styles.component}>
       <div style={{ width: "30px", height: "30px" }}></div>
+      <div style={{ width: "30px", height: "30px" }}></div>
       <div style={{ width: "30px" }}></div>
     </div>
   );
