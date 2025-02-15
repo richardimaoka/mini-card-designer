@@ -1,5 +1,7 @@
 .component {
   background-color: white;
+
+  transition: height 0.2s, width 0.2s;
 }
 
 .horizontal {

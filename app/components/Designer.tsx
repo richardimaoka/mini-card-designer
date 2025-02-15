@@ -1,22 +1,11 @@
 "use client";
 
-import { Card as HorizontalCard } from "./horizontal/2-items/auto-1fr/Card";
-import { Card as VerticalCard } from "./vertical/2-items/auto-1fr/Card";
+import { useEffect, useState } from "react";
 import styles from "./Designer.module.css";
-import { JSX, useEffect, useState } from "react";
+import { Mode, NumItems } from "./types";
+import { SwitchCard } from "./SwitchCard";
 
 type Props = {};
-
-type Mode = "horizontal" | "vertical";
-
-function SwitchCard({ mode }: { mode: Mode }): JSX.Element {
-  switch (mode) {
-    case "horizontal":
-      return <HorizontalCard />;
-    case "vertical":
-      return <VerticalCard />;
-  }
-}
 
 function switchStyle(mode: Mode): string {
   switch (mode) {
@@ -29,6 +18,7 @@ function switchStyle(mode: Mode): string {
 
 export function Designer(props: Props) {
   const [mode, setMode] = useState<Mode>("horizontal");
+  const [numItems, setNumItems] = useState<NumItems>("2");
 
   // argument `e` is NOT React.KeyboardEvent as it's passed to document.addEventListner
   function onKeyDown(e: KeyboardEvent) {
@@ -38,6 +28,27 @@ export function Designer(props: Props) {
         break;
       case "h":
         setMode("horizontal");
+        break;
+      case "2":
+        setNumItems("2");
+        break;
+      case "3":
+        setNumItems("3");
+        break;
+      case "4":
+        setNumItems("4");
+        break;
+      case "5":
+        setNumItems("5");
+        break;
+      case "6":
+        setNumItems("6");
+        break;
+      case "7":
+        setNumItems("7");
+        break;
+      case "8":
+        setNumItems("8");
         break;
       default:
         break;
@@ -54,7 +65,7 @@ export function Designer(props: Props) {
 
   return (
     <div className={styles.component + " " + styleSizing}>
-      <SwitchCard mode={mode} />
+      <SwitchCard mode={mode} numItems={numItems} />
     </div>
   );
 }
