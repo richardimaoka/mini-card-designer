@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import styles from "./Designer.module.css";
 import { Mode, NumItems } from "./types";
-import { SwitchCard } from "./SwitchCard";
+import { SwitchCard } from "./switch/SwitchCard";
 
 type Props = {};
 

@@ -1,6 +1,6 @@
-import { Mode, NumItems } from "./types";
-import { Card as VerticalCard } from "./vertical/2-items/auto-1fr/Card";
-import { Card as HorizontalCard } from "./horizontal/2-items/auto-1fr/Card";
+import { Mode, NumItems } from "../types";
+import { Card as VerticalCard } from "../cards/vertical/2-items/auto-1fr/Card";
+import { Card as HorizontalCard } from "../cards/horizontal/2-items/auto-1fr/Card";
 import { JSX } from "react";
 
 type Props = {
