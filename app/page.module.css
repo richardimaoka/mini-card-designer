@@ -6,7 +6,3 @@
   height: 100svh;
   background-color: #e6e6e6;
 }
-
-.component > :nth-child(1) {
-  width: 600px;
-}

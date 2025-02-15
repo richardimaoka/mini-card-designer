@@ -1,3 +1,13 @@
 .component {
   background-color: white;
 }
+
+.horizontal {
+  height: 60px;
+  width: 400px;
+}
+
+.vertical {
+  height: 400px;
+  width: 60px;
+}
