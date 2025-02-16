@@ -12,3 +12,35 @@
   display: grid;
   column-gap: 8px;
 }
+
+.focus1 > *:nth-child(1) {
+  border: solid 4px yellow;
+}
+
+.focus2 > *:nth-child(2) {
+  border: solid 4px yellow;
+}
+
+.focus3 > *:nth-child(3) {
+  border: solid 4px yellow;
+}
+
+.focus4 > *:nth-child(4) {
+  border: solid 4px yellow;
+}
+
+.focus5 > *:nth-child(5) {
+  border: solid 4px yellow;
+}
+
+.focus6 > *:nth-child(6) {
+  border: solid 4px yellow;
+}
+
+.focus7 > *:nth-child(7) {
+  border: solid 4px yellow;
+}
+
+.focus8 > *:nth-child(8) {
+  border: solid 4px yellow;
+}
