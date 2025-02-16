@@ -6,10 +6,12 @@ type Props = {};
 
 export function IncreaseDecrease(props: Props) {
   const [numItems, setNumItems] = useState(1);
-  console.log(`IncreaseDecrease numItems=${numItems}`);
+  const [focusMode, setFocusMode] = useState(false);
+  const [focused, setFocused] = useState(1);
 
   // argument `e` is NOT React.KeyboardEvent as it's passed to document.addEventListner
   function onKeyDown(e: KeyboardEvent) {
+    console.log("onKeyDown", numItems);
     switch (e.key) {
       case "1":
         setNumItems(1);
@@ -36,10 +38,14 @@ export function IncreaseDecrease(props: Props) {
         setNumItems(8);
         break;
       case "-":
-        setNumItems((n) => (n > 1 ? n - 1 : n));
+        if (numItems > 1) {
+          setNumItems(numItems - 1);
+        }
         break;
       case "+":
-        setNumItems((n) => (n < 8 ? n + 1 : n));
+        if (numItems < 8) {
+          setNumItems(numItems + 1);
+        }
         break;
       default:
         break;
@@ -50,7 +56,11 @@ export function IncreaseDecrease(props: Props) {
     document.addEventListener("keydown", onKeyDown);
 
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [
+    // State variables are necessary dependencies, othwerwise,
+    // onKeydown callback always uses the initial (stale) state.
+    numItems,
+  ]);
 
   const children = Array.from(Array(numItems).keys());
 
