@@ -1,6 +1,5 @@
-import { JSX, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "./IncreaseDecrease.module.css";
-import { SquareComponent } from "./shapes/SquareComponent";
 import {
   copyShape,
   defaultCard,
@@ -8,26 +7,10 @@ import {
   defaultRectangle,
   defaultSquare,
   Shape,
-  Square,
 } from "./types";
-import { CircleComponent } from "./shapes/CircleComponent";
-import { RectangleComponent } from "./shapes/RectangleComponent";
-import { HorizontalCardComponent } from "./shapes/HorizontalCardComponent";
+import { Swither } from "./Switcher";
 
 type Props = {};
-
-function Swither({ s }: { s: Shape }): JSX.Element {
-  switch (s.shapeType) {
-    case "circle":
-      return <CircleComponent />;
-    case "rectangle":
-      return <RectangleComponent />;
-    case "card":
-      return <HorizontalCardComponent {...s} />;
-    case "square":
-      return <SquareComponent />;
-  }
-}
 
 export function IncreaseDecrease(props: Props) {
   const initShape = defaultSquare();
@@ -153,7 +136,7 @@ export function IncreaseDecrease(props: Props) {
         style={{ gridTemplateColumns: `repeat(${contents.length}, auto)` }}
       >
         {contents.map((x, i) => (
-          <Swither key={i} s={x} />
+          <Swither key={i} shape={x} />
         ))}
       </div>
     </div>
