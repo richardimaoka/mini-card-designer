@@ -10,23 +10,34 @@ export type ShapeNameOriginal =
 
 export type Circle = {
   shapeType: "circle";
+  id: string;
   radius: number;
+  focused?: boolean;
 };
 
 export type Rectangle = {
   shapeType: "rectangle";
+  id: string;
   width: number;
   height: number;
+  focused?: boolean;
 };
 
 export type Square = {
   shapeType: "square";
+  id: string;
   sideLength: number;
+  focused?: boolean;
 };
 
 export type Card = {
   shapeType: "card";
-  children: Shape[];
+  id: string;
+  focused?: boolean;
+  children: {
+    shape: Shape;
+    focused?: boolean;
+  }[];
 };
 
 export type Shape = Square | Circle | Rectangle | Card;
@@ -45,19 +56,28 @@ export function sw(s: Shape): number {
 }
 
 export function defaultCircle(): Circle {
-  return { shapeType: "circle", radius: 30 };
+  return { shapeType: "circle", id: crypto.randomUUID(), radius: 30 };
 }
 
 export function defaultSquare(): Square {
-  return { shapeType: "square", sideLength: 30 };
+  return { shapeType: "square", id: crypto.randomUUID(), sideLength: 30 };
 }
 
 export function defaultRectangle(): Rectangle {
-  return { shapeType: "rectangle", width: 120, height: 30 };
+  return {
+    shapeType: "rectangle",
+    id: crypto.randomUUID(),
+    width: 120,
+    height: 30,
+  };
 }
 
 export function defaultCard(child: Shape): Card {
-  return { shapeType: "card", children: [child] };
+  return {
+    shapeType: "card",
+    id: crypto.randomUUID(),
+    children: [{ shape: child }],
+  };
 }
 
 export function copyShape(s: Shape): Shape {
@@ -69,7 +89,10 @@ export function copyShape(s: Shape): Shape {
     case "card":
       return {
         ...s,
-        children: s.children.map(copyShape),
+        children: s.children.map((c) => ({
+          focased: c.focused,
+          shape: copyShape(c.shape),
+        })),
       };
   }
 }

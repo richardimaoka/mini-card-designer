@@ -7,7 +7,7 @@ import { SquareComponent } from "./SquareComponent";
 
 type InnerProps = { shape: Shape };
 
-export function InnerSwitcher({ shape }: InnerProps): JSX.Element {
+function InnerSwitcher({ shape }: InnerProps): JSX.Element {
   switch (shape.shapeType) {
     case "circle":
       return <CircleComponent />;
@@ -29,7 +29,7 @@ export function HorizontalCardComponent(props: Props) {
       style={{ gridAutoColumns: `repeat(${props.children.length}, auto)` }}
     >
       {props.children.map((x, i) => (
-        <InnerSwitcher key={i} shape={x} />
+        <InnerSwitcher key={i} shape={x.shape} />
       ))}
     </div>
   );
