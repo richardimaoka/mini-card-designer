@@ -56,6 +56,10 @@ export function defaultRectangle(): Rectangle {
   return { shapeType: "rectangle", width: 120, height: 30 };
 }
 
+export function defaultCard(child: Shape): Card {
+  return { shapeType: "card", children: [child] };
+}
+
 export function copyShape(s: Shape): Shape {
   switch (s.shapeType) {
     case "rectangle":
