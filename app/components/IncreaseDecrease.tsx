@@ -1,17 +1,36 @@
-import { useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import styles from "./IncreaseDecrease.module.css";
 import { Square } from "./shapes/Square";
+import { ShapeStruct } from "./types";
+import { Circle } from "./shapes/Circle";
+import { Rectangle } from "./shapes/Rectangle";
 
 type Props = {};
 
+function Swither({ s }: { s: ShapeStruct }): JSX.Element {
+  switch (s.shape) {
+    case "circle":
+      return <Circle />;
+    case "rectangle":
+      return <Rectangle />;
+    case "card":
+      return <div>card</div>;
+    case "square":
+      return <Square />;
+  }
+}
+
 export function IncreaseDecrease(props: Props) {
-  const [numItems, setNumItems] = useState(1);
+  const [contents, setContents] = useState<ShapeStruct[]>([
+    { shape: "square", sideLength: 30 },
+  ]);
+
   const [focusMode, setFocusMode] = useState(false);
   const [focused, setFocused] = useState(1);
 
   // argument `e` is NOT React.KeyboardEvent as it's passed to document.addEventListner
   function onKeyDown(e: KeyboardEvent) {
-    console.log("onKeyDown", numItems, e.key);
+    console.log("onKeyDown", contents.length, e.key);
     if (focusMode) {
       switch (e.key) {
         case "Escape":
@@ -23,33 +42,9 @@ export function IncreaseDecrease(props: Props) {
           }
           break;
         case "ArrowRight":
-          if (focused < numItems) {
+          if (focused < contents.length) {
             setFocused(focused + 1);
           }
-          break;
-        case "1":
-          setFocused(1);
-          break;
-        case "2":
-          setFocused(2);
-          break;
-        case "3":
-          setFocused(3);
-          break;
-        case "4":
-          setFocused(4);
-          break;
-        case "5":
-          setFocused(5);
-          break;
-        case "6":
-          setFocused(6);
-          break;
-        case "7":
-          setFocused(7);
-          break;
-        case "8":
-          setFocused(8);
           break;
         default:
           break;
@@ -60,38 +55,19 @@ export function IncreaseDecrease(props: Props) {
           setFocusMode(true);
           break;
         case "-":
-          if (numItems > 1) {
-            setNumItems(numItems - 1);
+          if (contents.length > 1) {
+            const newContents = contents.slice(0, contents.length - 1);
+            setContents(newContents);
           }
           break;
         case "+":
-          if (numItems < 8) {
-            setNumItems(numItems + 1);
+          if (contents.length < 8) {
+            const newContents: ShapeStruct[] = [
+              ...contents,
+              { shape: "square", sideLength: 30 },
+            ];
+            setContents(newContents);
           }
-          break;
-        case "1":
-          setNumItems(1);
-          break;
-        case "2":
-          setNumItems(2);
-          break;
-        case "3":
-          setNumItems(3);
-          break;
-        case "4":
-          setNumItems(4);
-          break;
-        case "5":
-          setNumItems(5);
-          break;
-        case "6":
-          setNumItems(6);
-          break;
-        case "7":
-          setNumItems(7);
-          break;
-        case "8":
-          setNumItems(8);
           break;
         default:
           break;
@@ -106,9 +82,9 @@ export function IncreaseDecrease(props: Props) {
   }, [
     // State variables are necessary dependencies, othwerwise,
     // onKeydown callback always uses the initial (stale) state.
-    numItems,
     focused,
     focusMode,
+    contents,
   ]);
 
   function focusStyle() {
@@ -138,16 +114,14 @@ export function IncreaseDecrease(props: Props) {
     }
   }
 
-  const children = Array.from(Array(numItems).keys());
-
   return (
     <div className={styles.component}>
       <div
         className={styles.card + (focusMode ? " " + focusStyle() : "")}
-        style={{ gridTemplateColumns: `repeat(${numItems}, auto)` }}
+        style={{ gridTemplateColumns: `repeat(${contents.length}, auto)` }}
       >
-        {children.map((_, i) => (
-          <Square key={i} />
+        {contents.map((x, i) => (
+          <Swither key={i} s={x} />
         ))}
       </div>
     </div>
