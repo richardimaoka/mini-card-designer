@@ -1,7 +1,7 @@
 import { JSX, useEffect, useState } from "react";
 import styles from "./IncreaseDecrease.module.css";
-import { Square } from "./shapes/Square";
-import { ShapeStruct } from "./types";
+import { SquareComponent } from "./shapes/SquareComponent";
+import { ShapeStruct, Square } from "./types";
 import { Circle } from "./shapes/Circle";
 import { Rectangle } from "./shapes/Rectangle";
 
@@ -16,8 +16,12 @@ function Swither({ s }: { s: ShapeStruct }): JSX.Element {
     case "card":
       return <div>card</div>;
     case "square":
-      return <Square />;
+      return <SquareComponent />;
   }
+}
+
+function defaultSquare(): Square {
+  return { shape: "square", sideLength: 30 };
 }
 
 export function IncreaseDecrease(props: Props) {

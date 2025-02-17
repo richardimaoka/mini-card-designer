@@ -1,6 +1,6 @@
 import { JSX, useEffect, useState } from "react";
 import { Circle } from "./shapes/Circle";
-import { Square } from "./shapes/Square";
+import { SquareComponent } from "./shapes/SquareComponent";
 import styles from "./SwitchShape.module.css";
 import { Shape } from "./types";
 import { RectangleRoundCorner } from "./shapes/RectangleRoundCorner";
@@ -18,7 +18,7 @@ function Swither({ shape }: { shape: Shape }): JSX.Element {
     case "rectangle-rounded":
       return <RectangleRoundCorner />;
     case "square":
-      return <Square />;
+      return <SquareComponent />;
     case "square-rounded":
       return <SquareRoundCorner />;
   }
