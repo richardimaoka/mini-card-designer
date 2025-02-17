@@ -1,14 +1,14 @@
 import { JSX, useEffect, useState } from "react";
 import styles from "./IncreaseDecrease.module.css";
 import { SquareComponent } from "./shapes/SquareComponent";
-import { ShapeStruct, Square } from "./types";
+import { copyShape, defaultSquare, Shape, Square } from "./types";
 import { CircleComponent } from "./shapes/CircleComponent";
 import { RectangleComponent } from "./shapes/RectangleComponent";
 
 type Props = {};
 
-function Swither({ s }: { s: ShapeStruct }): JSX.Element {
-  switch (s.shape) {
+function Swither({ s }: { s: Shape }): JSX.Element {
+  switch (s.shapeType) {
     case "circle":
       return <CircleComponent />;
     case "rectangle":
@@ -20,15 +20,9 @@ function Swither({ s }: { s: ShapeStruct }): JSX.Element {
   }
 }
 
-function defaultSquare(): Square {
-  return { shape: "square", sideLength: 30 };
-}
-
 export function IncreaseDecrease(props: Props) {
-  const [contents, setContents] = useState<ShapeStruct[]>([
-    { shape: "square", sideLength: 30 },
-  ]);
-
+  const initShape = defaultSquare();
+  const [contents, setContents] = useState<Shape[]>([initShape]);
   const [focusMode, setFocusMode] = useState(false);
   const [focused, setFocused] = useState(1);
 
@@ -50,6 +44,10 @@ export function IncreaseDecrease(props: Props) {
             setFocused(focused + 1);
           }
           break;
+        case "c":
+          const newContents = [contents];
+
+          break;
         default:
           break;
       }
@@ -60,17 +58,17 @@ export function IncreaseDecrease(props: Props) {
           break;
         case "-":
           if (contents.length > 1) {
-            const newContents = contents.slice(0, contents.length - 1);
-            setContents(newContents);
+            const minus1 = contents
+              .map(copyShape)
+              .slice(0, contents.length - 1);
+            setContents(minus1);
           }
           break;
         case "+":
           if (contents.length < 8) {
-            const newContents: ShapeStruct[] = [
-              ...contents,
-              { shape: "square", sideLength: 30 },
-            ];
-            setContents(newContents);
+            let plus1 = contents.map(copyShape);
+            plus1.push(defaultSquare());
+            setContents(plus1);
           }
           break;
         default:
