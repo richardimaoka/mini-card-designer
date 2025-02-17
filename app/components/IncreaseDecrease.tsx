@@ -12,6 +12,7 @@ import {
 } from "./types";
 import { CircleComponent } from "./shapes/CircleComponent";
 import { RectangleComponent } from "./shapes/RectangleComponent";
+import { HorizontalCardComponent } from "./shapes/HorizontalCardComponent";
 
 type Props = {};
 
@@ -22,7 +23,7 @@ function Swither({ s }: { s: Shape }): JSX.Element {
     case "rectangle":
       return <RectangleComponent />;
     case "card":
-      return <div>card</div>;
+      return <HorizontalCardComponent {...s} />;
     case "square":
       return <SquareComponent />;
   }
