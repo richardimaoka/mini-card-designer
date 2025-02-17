@@ -2,17 +2,17 @@ import { JSX, useEffect, useState } from "react";
 import styles from "./IncreaseDecrease.module.css";
 import { SquareComponent } from "./shapes/SquareComponent";
 import { ShapeStruct, Square } from "./types";
-import { Circle } from "./shapes/Circle";
-import { Rectangle } from "./shapes/Rectangle";
+import { CircleComponent } from "./shapes/CircleComponent";
+import { RectangleComponent } from "./shapes/RectangleComponent";
 
 type Props = {};
 
 function Swither({ s }: { s: ShapeStruct }): JSX.Element {
   switch (s.shape) {
     case "circle":
-      return <Circle />;
+      return <CircleComponent />;
     case "rectangle":
-      return <Rectangle />;
+      return <RectangleComponent />;
     case "card":
       return <div>card</div>;
     case "square":
