@@ -1,5 +1,5 @@
 import { JSX } from "react";
-import { Card, Shape } from "../types";
+import { CardShape, Shape } from "../types";
 import { CircleComponent } from "./CircleComponent";
 import styles from "./HorizontalCardComponent.module.css";
 import { RectangleComponent } from "./RectangleComponent";
@@ -20,7 +20,7 @@ function InnerSwitcher({ shape }: InnerProps): JSX.Element {
   }
 }
 
-type Props = Card;
+type Props = CardShape;
 
 export function HorizontalCardComponent(props: Props) {
   return (
@@ -29,7 +29,7 @@ export function HorizontalCardComponent(props: Props) {
       style={{ gridAutoColumns: `repeat(${props.children.length}, auto)` }}
     >
       {props.children.map((x, i) => (
-        <InnerSwitcher key={i} shape={x.shape} />
+        <InnerSwitcher key={i} shape={x} />
       ))}
     </div>
   );

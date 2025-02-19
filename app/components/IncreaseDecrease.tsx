@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import styles from "./IncreaseDecrease.module.css";
 import {
   copyShape,
-  defaultCard,
-  defaultCircle,
-  defaultRectangle,
-  defaultSquare,
+  crateCard,
+  createCircle,
+  createRectangle,
+  createSquare,
   Shape,
 } from "./types";
 import { Swither } from "./Switcher";
@@ -13,7 +13,7 @@ import { Swither } from "./Switcher";
 type Props = {};
 
 export function IncreaseDecrease(props: Props) {
-  const initShape = defaultSquare();
+  const initShape = createSquare();
   const [contents, setContents] = useState<Shape[]>([initShape]);
   const [focusMode, setFocusMode] = useState(false);
   const [focused, setFocused] = useState(0);
@@ -39,25 +39,25 @@ export function IncreaseDecrease(props: Props) {
         case "h": {
           let newContents = contents.map(copyShape);
           const child = newContents[focused];
-          newContents[focused] = defaultCard(child);
+          newContents[focused] = crateCard(child);
           setContents(newContents);
           break;
         }
         case "c": {
           let newContents = contents.map(copyShape);
-          newContents[focused] = defaultCircle();
+          newContents[focused] = createCircle();
           setContents(newContents);
           break;
         }
         case "r": {
           let newContents = contents.map(copyShape);
-          newContents[focused] = defaultRectangle();
+          newContents[focused] = createRectangle();
           setContents(newContents);
           break;
         }
         case "s": {
           let newContents = contents.map(copyShape);
-          newContents[focused] = defaultSquare();
+          newContents[focused] = createSquare();
           setContents(newContents);
           break;
         }
@@ -80,7 +80,7 @@ export function IncreaseDecrease(props: Props) {
         case "+":
           if (contents.length < 8) {
             let plus1 = contents.map(copyShape);
-            plus1.push(defaultSquare());
+            plus1.push(createSquare());
             setContents(plus1);
           }
           break;

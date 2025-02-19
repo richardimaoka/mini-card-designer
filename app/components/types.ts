@@ -1,69 +1,40 @@
-export type Mode = "horizontal" | "vertical";
-export type NumItems = "2" | "3";
-// | "4" | "5" | "6" | "7" | "8";
-export type ShapeNameOriginal =
-  | "circle"
-  | "square"
-  | "rectangle"
-  | "square-rounded"
-  | "rectangle-rounded";
-
-export type Circle = {
+export type CircleShape = {
   shapeType: "circle";
   id: string;
   radius: number;
-  focused?: boolean;
 };
 
-export type Rectangle = {
+export type RectangleShape = {
   shapeType: "rectangle";
   id: string;
   width: number;
   height: number;
-  focused?: boolean;
 };
 
-export type Square = {
+export type SquareShape = {
   shapeType: "square";
   id: string;
   sideLength: number;
-  focused?: boolean;
 };
 
-export type Card = {
+export type CardShape = {
   shapeType: "card";
   id: string;
   focused?: boolean;
-  children: {
-    shape: Shape;
-    focused?: boolean;
-  }[];
+  children: Shape[];
 };
 
-export type Shape = Square | Circle | Rectangle | Card;
+export type Shape = SquareShape | CircleShape | RectangleShape | CardShape;
 
-export function sw(s: Shape): number {
-  switch (s.shapeType) {
-    case "rectangle":
-      return s.height;
-    case "circle":
-      return s.radius;
-    case "square":
-      return s.sideLength;
-    case "card":
-      return 0;
-  }
-}
-
-export function defaultCircle(): Circle {
+export function createCircle(): CircleShape {
   return { shapeType: "circle", id: crypto.randomUUID(), radius: 30 };
 }
 
-export function defaultSquare(): Square {
+export function createSquare(): SquareShape {
   return { shapeType: "square", id: crypto.randomUUID(), sideLength: 30 };
 }
 
-export function defaultRectangle(): Rectangle {
+export function createRectangle(): RectangleShape {
   return {
     shapeType: "rectangle",
     id: crypto.randomUUID(),
@@ -72,11 +43,11 @@ export function defaultRectangle(): Rectangle {
   };
 }
 
-export function defaultCard(child: Shape): Card {
+export function crateCard(child: Shape): CardShape {
   return {
     shapeType: "card",
     id: crypto.randomUUID(),
-    children: [{ shape: child }],
+    children: [child],
   };
 }
 
@@ -89,10 +60,7 @@ export function copyShape(s: Shape): Shape {
     case "card":
       return {
         ...s,
-        children: s.children.map((c) => ({
-          focased: c.focused,
-          shape: copyShape(c.shape),
-        })),
+        children: s.children.map(copyShape),
       };
   }
 }
