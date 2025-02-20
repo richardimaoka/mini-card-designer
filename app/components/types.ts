@@ -26,6 +26,8 @@ export type CardShape = {
 
 export type Shape = SquareShape | CircleShape | RectangleShape | CardShape;
 
+export type ShapeType = Shape["shapeType"];
+
 export function createCircle(): CircleShape {
   return { shapeType: "circle", id: crypto.randomUUID(), radius: 30 };
 }
@@ -64,3 +66,13 @@ export function copyShape(s: Shape): Shape {
       };
   }
 }
+
+// function convertTo(path: Path, shapeType: ShapeType) {}
+
+// function insert(path: Path, shapeType: ShapeType) {}
+
+// function appendShape(path: Path, shapeType: ShapeType) {}
+
+// function prefixShape(path: Path) {}
+
+// function wrap(path: Path) {}
