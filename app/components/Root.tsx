@@ -37,7 +37,7 @@ export function Root(props: Props) {
 
   return (
     <div className={styles.component}>
-      <Container1DHorizontal {...newShape} path={[]} />
+      <Container1DHorizontal {...newShape} parentPath={[]} />
     </div>
   );
 }

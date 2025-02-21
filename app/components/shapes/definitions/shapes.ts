@@ -46,7 +46,7 @@ export type StandaloneShape = CircleShape;
 export type ContainerShape = Contanier1DShape;
 
 export type FocusProps = {
-  path: Path;
+  parentPath: Path;
   focusPath?: Path;
 };
 

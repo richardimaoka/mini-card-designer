@@ -1,8 +1,13 @@
 import { JSX } from "react";
 import { Circle } from "./Circle";
 import styles from "./Container1D.module.css";
-import { pathAppend, pathMatched } from "./definitions/shapes";
-import { Contanier1DShape, FocusProps, Shape } from "./definitions/shapes";
+import {
+  Contanier1DShape,
+  FocusProps,
+  pathAppend,
+  pathMatched,
+  Shape,
+} from "./definitions/shapes";
 
 type InnerSwitchProps = Shape & FocusProps;
 
@@ -25,7 +30,8 @@ export function InnerSwitch(props: InnerSwitchProps): JSX.Element {
 type Container1DProps = Contanier1DShape & FocusProps;
 
 export function Container1DHorizontal(props: Container1DProps) {
-  const focused = props.focusPath && pathMatched(props.path, props.focusPath);
+  const path = pathAppend(props.parentPath, props.id);
+  const focused = props.focusPath && pathMatched(path, props.focusPath);
 
   return (
     <div
@@ -43,9 +49,13 @@ export function Container1DHorizontal(props: Container1DProps) {
       }}
     >
       {props.children.map((childShape) => {
-        const childPath = pathAppend(props.path, childShape.id);
+        const childPath = pathAppend(props.parentPath, childShape.id);
         return (
-          <InnerSwitch key={childShape.id} {...childShape} path={childPath} />
+          <InnerSwitch
+            key={childShape.id}
+            {...childShape}
+            parentPath={childPath}
+          />
         );
       })}
     </div>
@@ -53,7 +63,8 @@ export function Container1DHorizontal(props: Container1DProps) {
 }
 
 export function Container1DVertical(props: Container1DProps) {
-  const focused = props.focusPath && pathMatched(props.path, props.focusPath);
+  const path = pathAppend(props.parentPath, props.id);
+  const focused = props.focusPath && pathMatched(path, props.focusPath);
 
   return (
     <div
@@ -71,9 +82,13 @@ export function Container1DVertical(props: Container1DProps) {
       }}
     >
       {props.children.map((childShape) => {
-        const childPath = pathAppend(props.path, childShape.id);
+        const childPath = pathAppend(props.parentPath, childShape.id);
         return (
-          <InnerSwitch key={childShape.id} {...childShape} path={childPath} />
+          <InnerSwitch
+            key={childShape.id}
+            {...childShape}
+            parentPath={childPath}
+          />
         );
       })}
     </div>
