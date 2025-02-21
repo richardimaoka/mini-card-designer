@@ -96,6 +96,112 @@ export function pathMatched(path1: Path, path2: Path) {
   return true;
 }
 
+function findShapeRecursive(
+  shape: Shape,
+  remainingPath: Path
+): Shape | undefined {
+  switch (remainingPath.length) {
+    case 0:
+      return undefined;
+    case 1:
+      return remainingPath[0] === shape.id ? shape : undefined;
+    case 2:
+      switch (shape.shapeType) {
+        case "container1D":
+          const child = shape.children.find((c) => c.id === remainingPath[1]);
+          return child;
+        case "circle":
+          return undefined;
+      }
+    default:
+      switch (shape.shapeType) {
+        case "container1D":
+          const child = shape.children.find((c) => c.id === remainingPath[1]);
+          if (!child) {
+            return undefined;
+          } else {
+            return findShapeRecursive(child, [...remainingPath].slice(1));
+          }
+        case "circle":
+          return undefined;
+      }
+  }
+}
+
+export function findShape(rootShape: Shape, path: Path): Shape | undefined {
+  return findShapeRecursive(rootShape, path);
+}
+
+export function parentPath(path: Path): Path {
+  const newPath = [...path];
+  newPath.pop();
+  return newPath;
+}
+
+export function focusInside(path: Path, shape: Shape): Path {
+  switch (shape.shapeType) {
+    case "container1D":
+      const childInside = shape.children[0];
+      return [...path, childInside.id];
+    case "circle":
+      return path;
+  }
+}
+
+export function focusOutside(path: Path, shape: Shape): Path {
+  if (path.length <= 1) {
+    return path;
+  } else {
+    return parentPath(path);
+  }
+}
+
+export function focusNext(path: Path, rootShape: Shape): Path {
+  const parent = findShape(rootShape, parentPath(path));
+
+  if (!parent) {
+    return path; // not found, return the unchanged path
+  }
+
+  switch (parent.shapeType) {
+    case "container1D":
+      const pathEnd = path[path.length - 1];
+      const currentIndex = parent.children.findIndex((c) => c.id === pathEnd);
+
+      if (currentIndex < parent.children.length - 1) {
+        const next = parent.children[currentIndex + 1];
+        return [...parentPath(path), next.id];
+      } else {
+        return path; // no more next child, return the unchanged path
+      }
+    case "circle":
+      return path; // parent is not container (impossible?) return the unchanged path
+  }
+}
+
+export function focusPrev(path: Path, rootShape: Shape): Path {
+  const parent = findShape(rootShape, parentPath(path));
+
+  if (!parent) {
+    return path; // not found, return the unchanged path
+  }
+
+  switch (parent.shapeType) {
+    case "container1D":
+      const pathEnd = path[path.length - 1];
+      const currentIndex = parent.children.findIndex((c) => c.id === pathEnd);
+
+      if (0 < currentIndex) {
+        const prev = parent.children[currentIndex - 1];
+        return [...parentPath(path), prev.id];
+      } else {
+        return path; // no prev child, return the unchanged path
+      }
+    case "circle":
+      return path; // parent is not container (impossible?) return the unchanged path
+  }
+}
+
 /////////////////////////////////////////////////////////////////
 // Container1D  functions
 /////////////////////////////////////////////////////////////////

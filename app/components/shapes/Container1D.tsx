@@ -87,6 +87,8 @@ export function Container1DVertical(props: Container1DProps) {
         paddingRight: `${props.padding.rightPx}px`,
 
         backgroundColor: props.backgroundColor,
+
+        border: "solid 2px yellow",
       }}
     >
       {props.children.map((childShape) => {
