@@ -18,40 +18,22 @@ const mapping = [
   },
 ];
 
-function to3Elems(shape: Contanier1DShape): Contanier1DShape {
+function changeChildrenSize(
+  shape: Contanier1DShape,
+  numChildren: number
+): Contanier1DShape {
   const newShape = copyContainer1D(shape);
 
-  // Children size to be 3
+  // Children size to be numChildren
   newShape.children = [];
-  for (let i = 0; i < 3; i++) {
-    if (i < shape.children.length - 1) {
+  for (let i = 0; i < numChildren; i++) {
+    if (i < shape.children.length) {
       newShape.children[i] = copyShape(shape.children[i]);
     } else {
       newShape.children[i] = createCircle(16);
+      newShape.trackSizes.push("auto");
     }
   }
-
-  // Change track size
-  newShape.trackSizes = ["auto", "1fr", "auto"];
-
-  return newShape;
-}
-
-function to5Elems(shape: Contanier1DShape): Contanier1DShape {
-  const newShape = copyContainer1D(shape);
-
-  // Children size to be 3
-  newShape.children = [];
-  for (let i = 0; i < 5; i++) {
-    if (i < shape.children.length - 1) {
-      newShape.children[i] = copyShape(shape.children[i]);
-    } else {
-      newShape.children[i] = createCircle(16);
-    }
-  }
-
-  // Change track size
-  newShape.trackSizes = ["auto", "1fr", "auto", "auto", "auto"];
 
   return newShape;
 }
@@ -61,6 +43,6 @@ export function Root(props: Props) {
   const rootShape = createContainer1D("horizontal", "white", [circle]);
   rootShape.widthPx = 600;
 
-  const newShape = to5Elems(to3Elems(rootShape));
+  const newShape = changeChildrenSize(rootShape, 5);
   return <Container1DHorizontal {...newShape} parentPath={[]} />;
 }
