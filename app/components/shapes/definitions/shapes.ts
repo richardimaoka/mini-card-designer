@@ -11,17 +11,17 @@ export type Padding = {
 
 export type Contanier1DShape = {
   shapeType: "container1D";
-  direction: "vertical" | "horizontal";
-
   id: string;
 
+  direction: "vertical" | "horizontal";
   trackSizes: trackSize[];
-  children: Shape[];
 
   padding: Padding;
   gapPx: number;
 
   backgroundColor: "white" | "#e6e6e6";
+
+  children: Shape[];
 };
 
 export type CircleShape = {
