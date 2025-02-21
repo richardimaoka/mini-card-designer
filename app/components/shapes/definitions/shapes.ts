@@ -139,3 +139,26 @@ export function createCircle(radiusPx: number): CircleShape {
     radiusPx: radiusPx,
   };
 }
+
+/////////////////////////////////////////////////////////////////
+// Shape functions
+/////////////////////////////////////////////////////////////////
+
+export function copyShape(s: Shape): Shape {
+  switch (s.shapeType) {
+    case "circle":
+      return { ...s };
+    case "container1D":
+      return {
+        ...s,
+        children: s.children.map(copyShape),
+      };
+  }
+}
+
+export function copyContainer1D(s: Contanier1DShape): Contanier1DShape {
+  return {
+    ...s,
+    children: s.children.map(copyShape),
+  };
+}
