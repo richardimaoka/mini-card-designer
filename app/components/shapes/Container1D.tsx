@@ -1,7 +1,7 @@
 import { JSX } from "react";
 import { Circle } from "./Circle";
 import styles from "./Container1D.module.css";
-import { pathAppend, pathMatched } from "./definitions/path";
+import { pathAppend, pathMatched } from "./definitions/shapes";
 import { Contanier1DShape, FocusProps, Shape } from "./definitions/shapes";
 
 type InnerSwitchProps = Shape & FocusProps;

@@ -1,4 +1,4 @@
-import { Path } from "./path";
+export type Path = string[];
 
 export type trackSize = "auto" | "1fr";
 
@@ -9,17 +9,21 @@ export type Padding = {
   rightPx: number;
 };
 
+export type Direction = "vertical" | "horizontal";
+
+export type BgColor = "white" | "#e6e6e6";
+
 export type Contanier1DShape = {
   shapeType: "container1D";
   id: string;
 
-  direction: "vertical" | "horizontal";
+  direction: Direction;
   trackSizes: trackSize[];
 
   padding: Padding;
   gapPx: number;
 
-  backgroundColor: "white" | "#e6e6e6";
+  backgroundColor?: BgColor;
 
   children: Shape[];
 };
@@ -62,3 +66,76 @@ function focus(model: ShapeModel, path: Path) {}
 
 function replace1(container: Contanier1DShape, at: number, shape: Shape) {}
 function wrap(shape: Shape) {}
+
+/////////////////////////////////////////////////////////////////
+// Path functions
+/////////////////////////////////////////////////////////////////
+
+export function pathAppend(path: Path, pathElement: string) {
+  return [...path, pathElement];
+}
+
+export function pathMatched(path1: Path, path2: Path) {
+  if (path1.length !== path2.length) {
+    // if length is different, early return false
+    return false;
+  }
+
+  // check each element
+  for (let index = 0; index < path1.length; index++) {
+    if (path1[index] !== path2[index]) {
+      // if any element is different, return false
+      return false;
+    }
+  }
+
+  // all elements are matched, then return true
+  return true;
+}
+
+/////////////////////////////////////////////////////////////////
+// Container1D  functions
+/////////////////////////////////////////////////////////////////
+
+export function createContainer1D(
+  direction: Direction,
+  bgColor: BgColor,
+  children: Shape[]
+): Contanier1DShape {
+  const id = crypto.randomUUID();
+
+  return {
+    shapeType: "container1D",
+    direction: direction,
+
+    id: id,
+    trackSizes: ["auto"],
+
+    padding: {
+      topPx: 8,
+      bottomPx: 8,
+      leftPx: 8,
+      rightPx: 8,
+    },
+
+    gapPx: 8,
+
+    backgroundColor: bgColor,
+
+    children: children,
+  };
+}
+
+/////////////////////////////////////////////////////////////////
+// Circle functions
+/////////////////////////////////////////////////////////////////
+
+export function createCircle(radiusPx: number): CircleShape {
+  const id = crypto.randomUUID();
+
+  return {
+    shapeType: "circle",
+    id: id,
+    radiusPx: radiusPx,
+  };
+}
