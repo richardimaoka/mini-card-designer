@@ -12,8 +12,9 @@ type Props = {};
 
 function to3Elems(shape: Contanier1DShape): Contanier1DShape {
   const newShape = copyContainer1D(shape);
-  newShape.children = [];
 
+  // Children size to be 3
+  newShape.children = [];
   for (let i = 0; i < 3; i++) {
     if (i < shape.children.length - 1) {
       newShape.children[i] = copyShape(shape.children[i]);
@@ -21,6 +22,9 @@ function to3Elems(shape: Contanier1DShape): Contanier1DShape {
       newShape.children[i] = createCircle(16);
     }
   }
+
+  // Change track size
+  newShape.trackSizes = ["auto", "auto", "auto"];
 
   return newShape;
 }
