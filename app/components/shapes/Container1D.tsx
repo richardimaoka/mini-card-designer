@@ -40,6 +40,9 @@ export function Container1DHorizontal(props: Container1DProps) {
         gridTemplateColumns: `${props.trackSizes.join(" ")}`,
         columnGap: `${props.gapPx}px`,
 
+        width: `${props.widthPx}px`,
+        height: `${props.heightPx}px`,
+
         paddingTop: `${props.padding.topPx}px`,
         paddingBottom: `${props.padding.bottomPx}px`,
         paddingLeft: `${props.padding.leftPx}px`,
@@ -51,11 +54,13 @@ export function Container1DHorizontal(props: Container1DProps) {
       {props.children.map((childShape) => {
         const childPath = pathAppend(props.parentPath, childShape.id);
         return (
+          // <div className={styles.temp}>
           <InnerSwitch
             key={childShape.id}
             {...childShape}
             parentPath={childPath}
           />
+          // </div>
         );
       })}
     </div>
@@ -73,6 +78,9 @@ export function Container1DVertical(props: Container1DProps) {
         gridTemplateRows: `${props.trackSizes.join(" ")}`,
         rowGap: `${props.gapPx}px`,
 
+        width: `${props.widthPx}px`,
+        height: `${props.heightPx}px`,
+
         paddingTop: `${props.padding.topPx}px`,
         paddingBottom: `${props.padding.bottomPx}px`,
         paddingLeft: `${props.padding.leftPx}px`,
@@ -84,11 +92,13 @@ export function Container1DVertical(props: Container1DProps) {
       {props.children.map((childShape) => {
         const childPath = pathAppend(props.parentPath, childShape.id);
         return (
+          // <div className={styles.temp}>
           <InnerSwitch
             key={childShape.id}
             {...childShape}
             parentPath={childPath}
           />
+          // </div>
         );
       })}
     </div>

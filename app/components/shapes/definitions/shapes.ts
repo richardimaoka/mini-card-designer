@@ -20,6 +20,9 @@ export type Contanier1DShape = {
   direction: Direction;
   trackSizes: trackSize[];
 
+  widthPx?: number;
+  heightPx?: number;
+
   padding: Padding;
   gapPx: number;
 
@@ -124,6 +127,38 @@ export function createContainer1D(
 
     children: children,
   };
+}
+
+export function updateContainerWidth(
+  shape: Contanier1DShape,
+  widthPx: number
+): Contanier1DShape {
+  const updatedShape = copyContainer1D(shape);
+  updatedShape.widthPx = widthPx;
+
+  return updatedShape;
+}
+
+export function updateContainerHeight(
+  shape: Contanier1DShape,
+  heightPx: number
+): Contanier1DShape {
+  const updatedShape = copyContainer1D(shape);
+  updatedShape.heightPx = heightPx;
+
+  return updatedShape;
+}
+
+export function updateContainerWidthHeight(
+  shape: Contanier1DShape,
+  widthPx: number,
+  heightPx: number
+): Contanier1DShape {
+  const updatedShape = copyContainer1D(shape);
+  updatedShape.widthPx = widthPx;
+  updatedShape.heightPx = heightPx;
+
+  return updatedShape;
 }
 
 /////////////////////////////////////////////////////////////////
