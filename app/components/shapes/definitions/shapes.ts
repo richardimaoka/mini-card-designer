@@ -162,8 +162,11 @@ export function focusOutside(path: Path, shape: Shape): Path {
 }
 
 export function focusNext(path: Path, rootShape: Shape): Path {
-  const parent = findShape(rootShape, parentPath(path));
+  if (path.length <= 1) {
+    return path; // path is empty or the root. return the unchanged path
+  }
 
+  const parent = findShape(rootShape, parentPath(path));
   if (!parent) {
     return path; // not found, return the unchanged path
   }
@@ -185,8 +188,11 @@ export function focusNext(path: Path, rootShape: Shape): Path {
 }
 
 export function focusPrev(path: Path, rootShape: Shape): Path {
-  const parent = findShape(rootShape, parentPath(path));
+  if (path.length <= 1) {
+    return path; // path is empty or the root. return the unchanged path
+  }
 
+  const parent = findShape(rootShape, parentPath(path));
   if (!parent) {
     return path; // not found, return the unchanged path
   }

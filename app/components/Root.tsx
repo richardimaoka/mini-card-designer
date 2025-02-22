@@ -16,14 +16,6 @@ import {
 
 type Props = {};
 
-function layoutChange(key: string) {}
-
-const mapping = [
-  {
-    keyCombo: "la",
-  },
-];
-
 function changeChildrenSize(
   shape: Contanier1DShape,
   numChildren: number
@@ -44,6 +36,8 @@ function changeChildrenSize(
   return newShape;
 }
 
+type HotKeyMode = "default" | "focus" | "layout";
+
 export function Root(props: Props) {
   const circle = createCircle(16);
   const shape = createContainer1D("horizontal", "white", [circle]);
@@ -52,15 +46,23 @@ export function Root(props: Props) {
 
   const [rootShape, setRootShape] = useState(newShape);
   const [focusPath, setFocusPath] = useState<Path>([]);
+  const [hotKeyMode, setHotKeyMode] = useState<HotKeyMode>("focus");
 
-  // argument `e` is NOT React.KeyboardEvent as it's passed to document.addEventListner
-  function onKeyDown(e: KeyboardEvent) {
-    switch (e.key) {
-      case "Escape":
-        setFocusPath([]);
-        break;
+  function hotKeyDefault(key: string) {
+    switch (key) {
       case "f":
-        setFocusPath([rootShape.id]);
+        setHotKeyMode("default");
+        break;
+      case "l":
+        setHotKeyMode("layout");
+        break;
+    }
+  }
+
+  function hotKeyFocusMove(key: string) {
+    switch (key) {
+      case "Escape":
+        setHotKeyMode("default");
         break;
       case "i":
         setFocusPath(focusInside(focusPath, rootShape));
@@ -77,10 +79,35 @@ export function Root(props: Props) {
     }
   }
 
+  function hotKeyLayoutChange(key: string) {
+    switch (key) {
+      case "Escape":
+        setHotKeyMode("default");
+        break;
+    }
+  }
+
+  // argument `e` is NOT React.KeyboardEvent as it's passed to document.addEventListner
+  function onKeyDown(
+    e: KeyboardEvent
+  ): null /* return null: a technique for exhaustiveness check */ {
+    switch (hotKeyMode) {
+      case "focus":
+        hotKeyFocusMove(e.key);
+        return null;
+      case "layout":
+        hotKeyLayoutChange(e.key);
+        return null;
+      case "default": // NOT `default`, but `case"default"` for exhaustiveness check
+        hotKeyDefault(e.key);
+        return null;
+    }
+  }
+
   useEffect(() => {
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [rootShape, focusPath]);
+  }, [rootShape, focusPath, hotKeyMode]);
 
   return (
     <Container1DHorizontal
