@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import styles from "./Root.module.css";
 import { Container1DHorizontal } from "./shapes/Container1D";
 import {
@@ -6,6 +7,11 @@ import {
   copyShape,
   createCircle,
   createContainer1D,
+  focusInside,
+  focusNext,
+  focusOutside,
+  focusPrev,
+  Path,
 } from "./shapes/definitions/shapes";
 
 type Props = {};
@@ -40,9 +46,47 @@ function changeChildrenSize(
 
 export function Root(props: Props) {
   const circle = createCircle(16);
-  const rootShape = createContainer1D("horizontal", "white", [circle]);
-  rootShape.widthPx = 600;
+  const shape = createContainer1D("horizontal", "white", [circle]);
+  shape.widthPx = 600;
+  const newShape = changeChildrenSize(shape, 5);
 
-  const newShape = changeChildrenSize(rootShape, 5);
-  return <Container1DHorizontal {...newShape} parentPath={[]} />;
+  const [rootShape, setRootShape] = useState(newShape);
+  const [focusPath, setFocusPath] = useState<Path>([]);
+
+  // argument `e` is NOT React.KeyboardEvent as it's passed to document.addEventListner
+  function onKeyDown(e: KeyboardEvent) {
+    switch (e.key) {
+      case "Escape":
+        setFocusPath([]);
+        break;
+      case "f":
+        setFocusPath([rootShape.id]);
+        break;
+      case "i":
+        setFocusPath(focusInside(focusPath, rootShape));
+        break;
+      case "o":
+        setFocusPath(focusOutside(focusPath, rootShape));
+        break;
+      case "h":
+        setFocusPath(focusPrev(focusPath, rootShape));
+        break;
+      case "l":
+        setFocusPath(focusNext(focusPath, rootShape));
+        break;
+    }
+  }
+
+  useEffect(() => {
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [rootShape, focusPath]);
+
+  return (
+    <Container1DHorizontal
+      {...rootShape}
+      parentPath={[]}
+      focusPath={focusPath}
+    />
+  );
 }

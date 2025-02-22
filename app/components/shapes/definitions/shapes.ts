@@ -138,7 +138,12 @@ export function parentPath(path: Path): Path {
   return newPath;
 }
 
-export function focusInside(path: Path, shape: Shape): Path {
+export function focusInside(path: Path, rootShape: Shape): Path {
+  const shape = findShape(rootShape, path);
+  if (!shape) {
+    return path; // not found, return the unchanged path
+  }
+
   switch (shape.shapeType) {
     case "container1D":
       const childInside = shape.children[0];

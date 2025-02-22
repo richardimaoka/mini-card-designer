@@ -49,16 +49,17 @@ export function Container1DHorizontal(props: Container1DProps) {
         paddingRight: `${props.padding.rightPx}px`,
 
         backgroundColor: props.backgroundColor,
+        border: focused ? "solid 2px yellow" : undefined,
       }}
     >
       {props.children.map((childShape) => {
-        const childPath = pathAppend(props.parentPath, childShape.id);
         return (
           // <div className={styles.temp}>
           <InnerSwitch
             key={childShape.id}
             {...childShape}
-            parentPath={childPath}
+            parentPath={path}
+            focusPath={props.focusPath}
           />
           // </div>
         );
@@ -88,17 +89,17 @@ export function Container1DVertical(props: Container1DProps) {
 
         backgroundColor: props.backgroundColor,
 
-        border: "solid 2px yellow",
+        border: focused ? "solid 2px yellow" : undefined,
       }}
     >
       {props.children.map((childShape) => {
-        const childPath = pathAppend(props.parentPath, childShape.id);
         return (
           // <div className={styles.temp}>
           <InnerSwitch
             key={childShape.id}
             {...childShape}
-            parentPath={childPath}
+            parentPath={path}
+            focusPath={props.focusPath}
           />
           // </div>
         );
