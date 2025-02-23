@@ -14,6 +14,7 @@ import {
   focusPrev,
   Path,
   Shape,
+  unwrap,
   wrapIntoContainer1D,
 } from "./shapes/definitions/shapes";
 
@@ -57,6 +58,12 @@ export function Root(props: Props) {
           rootShape,
           focusPath
         );
+        setRootShape(newRootShape);
+        setFocusPath(newFocusPath);
+        break;
+      }
+      case "u": {
+        const [newRootShape, newFocusPath] = unwrap(rootShape, focusPath);
         setRootShape(newRootShape);
         setFocusPath(newFocusPath);
         break;

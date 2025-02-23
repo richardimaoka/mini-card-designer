@@ -358,15 +358,34 @@ export function replaceShape(
 
 export function wrapIntoContainer1D(
   rootShape: Shape,
-  path: Path
+  focusPath: Path
 ): [Shape, Path] {
-  const target = findShape(rootShape, path);
+  const target = findShape(rootShape, focusPath);
   if (!target) {
-    return [rootShape, path]; // failed to find target or parent, return unchanged rootShape
+    return [rootShape, focusPath]; // failed to find target or parent, return unchanged rootShape
   }
 
   const wrapped = createContainer1D("horizontal", undefined, [target]);
-  return replaceShape(rootShape, path, wrapped);
+  return replaceShape(rootShape, focusPath, wrapped);
+}
+
+export function unwrap(rootShape: Shape, focusPath: Path): [Shape, Path] {
+  const target = findShape(rootShape, focusPath);
+  if (!target) {
+    return [rootShape, focusPath]; // failed to find target or parent, return unchanged rootShape
+  }
+
+  switch (target.shapeType) {
+    case "container1D":
+      if (target.children.length !== 1) {
+        return [rootShape, focusPath]; // failed to unwrap, return unchanged rootShape
+      } else {
+        const child = target.children[0];
+        return replaceShape(rootShape, focusPath, child);
+      }
+    case "circle":
+      return [rootShape, focusPath]; // return unchanged rootShape
+  }
 }
 
 export function changeChildrenSize(
