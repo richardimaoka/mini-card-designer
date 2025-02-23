@@ -80,6 +80,12 @@ export function Container1DVertical(props: Container1DProps) {
   const path = pathAppend(props.parentPath, props.id);
   const focused = props.focusPath && pathMatched(path, props.focusPath);
 
+  const border = focused
+    ? "solid 2px yellow"
+    : props.nestLevel > 1
+    ? "dashed 2px grey"
+    : undefined;
+
   return (
     <div
       className={styles.component}
@@ -96,8 +102,7 @@ export function Container1DVertical(props: Container1DProps) {
         paddingRight: `${props.padding.rightPx}px`,
 
         backgroundColor: props.backgroundColor,
-
-        border: focused ? "solid 2px yellow" : undefined,
+        border: border,
       }}
     >
       {props.children.map((childShape) => {

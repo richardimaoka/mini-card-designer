@@ -256,19 +256,6 @@ export function createContainer1D(
   };
 }
 
-// export function wrapInContainer1D(
-//   direction: Direction,
-//   rootShape: Shape,
-//   path: Path
-// ): Contaiener1D {
-//   const shapeToWrap = findShape(rootShape, path);
-//   if (!shapeToWrap) {
-//     return rootShape; // failed to wrap, return unchanged rootShape
-//   }
-//   createContainer1D(direction);
-//   return;
-// }
-
 export function updateContainerWidth(
   shape: Contanier1DShape,
   widthPx: number
@@ -337,35 +324,39 @@ export function findChildIndex(
 
 export function replaceShape(
   rootShape: Shape,
-  path: Path,
+  focusPath: Path,
   newShape: Shape
-): Shape {
+): [Shape, Path] {
   const newRootShape = copyShape(rootShape);
 
-  const target = findShape(newRootShape, path);
-  const parent = findShape(newRootShape, parentPath(path));
+  const target = findShape(newRootShape, focusPath);
+  const parent = findShape(newRootShape, parentPath(focusPath));
   if (!target || !parent) {
-    return rootShape; // failed to find target or parent, return unchanged rootShape
+    return [rootShape, focusPath]; // failed to find target or parent, return unchanged rootShape
   }
 
   switch (parent.shapeType) {
     case "container1D":
       const targetIndex = findChildIndex(parent, target.id);
       if (targetIndex < 0) {
-        return rootShape;
+        return [rootShape, focusPath]; // failed to find target or parent, return unchanged rootShape;
       } else {
         parent.children[targetIndex] = newShape;
-        return newRootShape;
+        const newPath = pathAppend(parentPath(focusPath), newShape.id);
+        return [newRootShape, newPath];
       }
     case "circle":
-      return rootShape;
+      return [rootShape, focusPath]; // failed to find target or parent, return unchanged rootShape
   }
 }
 
-export function wrapIntoContainer1D(rootShape: Shape, path: Path): Shape {
+export function wrapIntoContainer1D(
+  rootShape: Shape,
+  path: Path
+): [Shape, Path] {
   const target = findShape(rootShape, path);
   if (!target) {
-    return rootShape; // failed to find target or parent, return unchanged rootShape
+    return [rootShape, path]; // failed to find target or parent, return unchanged rootShape
   }
 
   const wrapped = createContainer1D("horizontal", undefined, [target]);

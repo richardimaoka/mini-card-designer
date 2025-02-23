@@ -29,13 +29,6 @@ export function Root(props: Props) {
   const [focusPath, setFocusPath] = useState<Path>([rootShape.id]);
   const [hotKeyMode, setHotKeyMode] = useState<HotKeyMode>("default");
 
-  function hotKeyFocusMove(key: string) {
-    switch (key) {
-    }
-  }
-
-  function hotKeyLayoutChange(key: string) {}
-
   // argument `e` is NOT React.KeyboardEvent as it's passed to document.addEventListner
   function onKeyDown(e: KeyboardEvent) {
     switch (e.key) {
@@ -59,8 +52,12 @@ export function Root(props: Props) {
       // Layout change hot keys
       ///////////////////////////////
       case "g":
-        const newRootShape = wrapIntoContainer1D(rootShape, focusPath);
+        const [newRootShape, newFocusPath] = wrapIntoContainer1D(
+          rootShape,
+          focusPath
+        );
         setRootShape(newRootShape);
+        setFocusPath(newFocusPath);
         break;
       case "v":
         //change the current focused container to vertical 1D
