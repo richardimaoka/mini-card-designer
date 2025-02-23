@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "./Root.module.css";
 import { Container1DHorizontal } from "./shapes/Container1D";
 import {
+  changeChildrenSize,
   Contanier1DShape,
   copyContainer1D,
   copyShape,
@@ -51,7 +52,7 @@ export function Root(props: Props) {
       ///////////////////////////////
       // Layout change hot keys
       ///////////////////////////////
-      case "g":
+      case "g": {
         const [newRootShape, newFocusPath] = wrapIntoContainer1D(
           rootShape,
           focusPath
@@ -59,24 +60,37 @@ export function Root(props: Props) {
         setRootShape(newRootShape);
         setFocusPath(newFocusPath);
         break;
+      }
       case "v":
         //change the current focused container to vertical 1D
         break;
       case "h":
         //change the current focused container to horizontal 1D
         break;
-      case "1":
+      case "1": {
         //change the number of elements
+        const [newRootShape] = changeChildrenSize(rootShape, focusPath, 1);
+        setRootShape(newRootShape);
         break;
-      case "2":
+      }
+      case "2": {
         //change the number of elements
+        const [newRootShape] = changeChildrenSize(rootShape, focusPath, 2);
+        setRootShape(newRootShape);
         break;
-      case "3":
+      }
+      case "3": {
         //change the number of elements
+        const [newRootShape] = changeChildrenSize(rootShape, focusPath, 3);
+        setRootShape(newRootShape);
         break;
-      case "4":
+      }
+      case "4": {
         //change the number of elements
+        const [newRootShape] = changeChildrenSize(rootShape, focusPath, 4);
+        setRootShape(newRootShape);
         break;
+      }
     }
   }
 

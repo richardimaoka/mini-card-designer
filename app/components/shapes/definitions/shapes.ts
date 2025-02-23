@@ -288,7 +288,7 @@ export function updateContainerWidthHeight(
   return updatedShape;
 }
 
-export function changeChildrenSize(
+export function changeContainer1DSize(
   shape: Contanier1DShape,
   numChildren: number
 ): Contanier1DShape {
@@ -296,9 +296,11 @@ export function changeChildrenSize(
 
   // Children size to be numChildren
   newShape.children = [];
+  newShape.trackSizes = [];
   for (let i = 0; i < numChildren; i++) {
     if (i < shape.children.length) {
       newShape.children[i] = copyShape(shape.children[i]);
+      newShape.trackSizes.push(shape.trackSizes[i]);
     } else {
       newShape.children[i] = createCircle(16);
       newShape.trackSizes.push("auto");
@@ -321,6 +323,10 @@ export function findChildIndex(
 
   return -1;
 }
+
+/////////////////////////////////////////////////////////////////
+// Root shape functions
+/////////////////////////////////////////////////////////////////
 
 export function replaceShape(
   rootShape: Shape,
@@ -346,7 +352,7 @@ export function replaceShape(
         return [newRootShape, newPath];
       }
     case "circle":
-      return [rootShape, focusPath]; // failed to find target or parent, return unchanged rootShape
+      return [rootShape, focusPath]; // return unchanged rootShape
   }
 }
 
@@ -361,6 +367,25 @@ export function wrapIntoContainer1D(
 
   const wrapped = createContainer1D("horizontal", undefined, [target]);
   return replaceShape(rootShape, path, wrapped);
+}
+
+export function changeChildrenSize(
+  rootShape: Shape,
+  focusPath: Path,
+  numChildren: number
+): [Shape, Path] {
+  const target = findShape(rootShape, focusPath);
+  if (!target) {
+    return [rootShape, focusPath]; // failed to find target or parent, return unchanged rootShape
+  }
+
+  switch (target.shapeType) {
+    case "container1D":
+      const newShape = changeContainer1DSize(target, numChildren);
+      return [newShape, focusPath];
+    case "circle":
+      return [rootShape, focusPath]; // return unchanged rootShape
+  }
 }
 
 /////////////////////////////////////////////////////////////////
