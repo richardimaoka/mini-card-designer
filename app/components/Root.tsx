@@ -12,58 +12,36 @@ import {
   focusOutside,
   focusPrev,
   Path,
+  Shape,
+  wrapIntoContainer1D,
 } from "./shapes/definitions/shapes";
 
 type Props = {};
-
-function changeChildrenSize(
-  shape: Contanier1DShape,
-  numChildren: number
-): Contanier1DShape {
-  const newShape = copyContainer1D(shape);
-
-  // Children size to be numChildren
-  newShape.children = [];
-  for (let i = 0; i < numChildren; i++) {
-    if (i < shape.children.length) {
-      newShape.children[i] = copyShape(shape.children[i]);
-    } else {
-      newShape.children[i] = createCircle(16);
-      newShape.trackSizes.push("auto");
-    }
-  }
-
-  return newShape;
-}
 
 type HotKeyMode = "default" | "focus" | "layout";
 
 export function Root(props: Props) {
   const circle = createCircle(16);
-  const shape = createContainer1D("horizontal", "white", [circle]);
-  shape.widthPx = 600;
-  const newShape = changeChildrenSize(shape, 5);
+  const container = createContainer1D("horizontal", "white", [circle]);
+  container.widthPx = 600;
 
-  const [rootShape, setRootShape] = useState(newShape);
-  const [focusPath, setFocusPath] = useState<Path>([]);
-  const [hotKeyMode, setHotKeyMode] = useState<HotKeyMode>("focus");
-
-  function hotKeyDefault(key: string) {
-    switch (key) {
-      case "f":
-        setHotKeyMode("default");
-        break;
-      case "l":
-        setHotKeyMode("layout");
-        break;
-    }
-  }
+  const [rootShape, setRootShape] = useState<Shape>(container);
+  const [focusPath, setFocusPath] = useState<Path>([rootShape.id]);
+  const [hotKeyMode, setHotKeyMode] = useState<HotKeyMode>("default");
 
   function hotKeyFocusMove(key: string) {
     switch (key) {
-      case "Escape":
-        setHotKeyMode("default");
-        break;
+    }
+  }
+
+  function hotKeyLayoutChange(key: string) {}
+
+  // argument `e` is NOT React.KeyboardEvent as it's passed to document.addEventListner
+  function onKeyDown(e: KeyboardEvent) {
+    switch (e.key) {
+      ///////////////////////////////
+      // Focus move hot keys
+      ///////////////////////////////
       case "i":
         setFocusPath(focusInside(focusPath, rootShape));
         break;
@@ -76,44 +54,51 @@ export function Root(props: Props) {
       case "l":
         setFocusPath(focusNext(focusPath, rootShape));
         break;
-    }
-  }
 
-  function hotKeyLayoutChange(key: string) {
-    switch (key) {
-      case "Escape":
-        setHotKeyMode("default");
+      ///////////////////////////////
+      // Layout change hot keys
+      ///////////////////////////////
+      case "g":
+        const newRootShape = wrapIntoContainer1D(rootShape, focusPath);
+        setRootShape(newRootShape);
+        break;
+      case "v":
+        //change the current focused container to vertical 1D
+        break;
+      case "h":
+        //change the current focused container to horizontal 1D
+        break;
+      case "1":
+        //change the number of elements
+        break;
+      case "2":
+        //change the number of elements
+        break;
+      case "3":
+        //change the number of elements
+        break;
+      case "4":
+        //change the number of elements
         break;
     }
   }
 
-  // argument `e` is NOT React.KeyboardEvent as it's passed to document.addEventListner
-  function onKeyDown(
-    e: KeyboardEvent
-  ): null /* return null: a technique for exhaustiveness check */ {
-    switch (hotKeyMode) {
-      case "focus":
-        hotKeyFocusMove(e.key);
-        return null;
-      case "layout":
-        hotKeyLayoutChange(e.key);
-        return null;
-      case "default": // NOT `default`, but `case"default"` for exhaustiveness check
-        hotKeyDefault(e.key);
-        return null;
-    }
-  }
-
   useEffect(() => {
+    console.log([rootShape, focusPath, hotKeyMode]);
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [rootShape, focusPath, hotKeyMode]);
 
-  return (
-    <Container1DHorizontal
-      {...rootShape}
-      parentPath={[]}
-      focusPath={focusPath}
-    />
-  );
+  switch (rootShape.shapeType) {
+    case "container1D":
+      return (
+        <Container1DHorizontal
+          {...rootShape}
+          parentPath={[]}
+          focusPath={focusPath}
+        />
+      );
+    default:
+      return <></>;
+  }
 }

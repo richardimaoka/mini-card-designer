@@ -138,11 +138,17 @@ export function parentPath(path: Path): Path {
   return newPath;
 }
 
+export function pathEnd(path: Path): string {
+  return path[path.length - 1];
+}
+
 export function focusInside(path: Path, rootShape: Shape): Path {
   const shape = findShape(rootShape, path);
   if (!shape) {
     return path; // not found, return the unchanged path
   }
+
+  console.log("focusInside", shape);
 
   switch (shape.shapeType) {
     case "container1D":
@@ -219,7 +225,7 @@ export function focusPrev(path: Path, rootShape: Shape): Path {
 
 export function createContainer1D(
   direction: Direction,
-  bgColor: BgColor,
+  bgColor: BgColor | undefined,
   children: Shape[]
 ): Contanier1DShape {
   const id = crypto.randomUUID();
@@ -245,6 +251,19 @@ export function createContainer1D(
     children: children,
   };
 }
+
+// export function wrapInContainer1D(
+//   direction: Direction,
+//   rootShape: Shape,
+//   path: Path
+// ): Contaiener1D {
+//   const shapeToWrap = findShape(rootShape, path);
+//   if (!shapeToWrap) {
+//     return rootShape; // failed to wrap, return unchanged rootShape
+//   }
+//   createContainer1D(direction);
+//   return;
+// }
 
 export function updateContainerWidth(
   shape: Contanier1DShape,
@@ -276,6 +295,77 @@ export function updateContainerWidthHeight(
   updatedShape.heightPx = heightPx;
 
   return updatedShape;
+}
+
+export function changeChildrenSize(
+  shape: Contanier1DShape,
+  numChildren: number
+): Contanier1DShape {
+  const newShape = copyContainer1D(shape);
+
+  // Children size to be numChildren
+  newShape.children = [];
+  for (let i = 0; i < numChildren; i++) {
+    if (i < shape.children.length) {
+      newShape.children[i] = copyShape(shape.children[i]);
+    } else {
+      newShape.children[i] = createCircle(16);
+      newShape.trackSizes.push("auto");
+    }
+  }
+
+  return newShape;
+}
+
+export function findChildIndex(
+  shape: Contanier1DShape,
+  targetId: string
+): number {
+  for (let index = 0; index < shape.children.length; index++) {
+    const c = shape.children[index];
+    if (c.id === targetId) {
+      return index;
+    }
+  }
+
+  return -1;
+}
+
+export function replaceShape(
+  rootShape: Shape,
+  path: Path,
+  newShape: Shape
+): Shape {
+  const newRootShape = copyShape(rootShape);
+
+  const target = findShape(newRootShape, path);
+  const parent = findShape(newRootShape, parentPath(path));
+  if (!target || !parent) {
+    return rootShape; // failed to find target or parent, return unchanged rootShape
+  }
+
+  switch (parent.shapeType) {
+    case "container1D":
+      const targetIndex = findChildIndex(parent, target.id);
+      if (targetIndex < 0) {
+        return rootShape;
+      } else {
+        parent.children[targetIndex] = newShape;
+        return newRootShape;
+      }
+    case "circle":
+      return rootShape;
+  }
+}
+
+export function wrapIntoContainer1D(rootShape: Shape, path: Path): Shape {
+  const target = findShape(rootShape, path);
+  if (!target) {
+    return rootShape; // failed to find target or parent, return unchanged rootShape
+  }
+
+  const wrapped = createContainer1D("horizontal", undefined, [target]);
+  return replaceShape(rootShape, path, wrapped);
 }
 
 /////////////////////////////////////////////////////////////////
