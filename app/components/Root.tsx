@@ -13,6 +13,7 @@ import {
   focusOutside,
   focusPrev,
   Path,
+  setTrackSizeAt,
   Shape,
   unwrap,
   wrapIntoContainer1D,
@@ -20,7 +21,7 @@ import {
 
 type Props = {};
 
-type HotKeyMode = "default" | "focus" | "layout";
+type HotKeyMode = "default" | "trackSize";
 
 export function Root(props: Props) {
   const circle = createCircle(16);
@@ -33,71 +34,116 @@ export function Root(props: Props) {
 
   // argument `e` is NOT React.KeyboardEvent as it's passed to document.addEventListner
   function onKeyDown(e: KeyboardEvent) {
-    switch (e.key) {
-      ///////////////////////////////
-      // Focus move hot keys
-      ///////////////////////////////
-      case "i":
-        setFocusPath(focusInside(focusPath, rootShape));
-        break;
-      case "o":
-        setFocusPath(focusOutside(focusPath, rootShape));
-        break;
-      case "h":
-        setFocusPath(focusPrev(focusPath, rootShape));
-        break;
-      case "l":
-        setFocusPath(focusNext(focusPath, rootShape));
+    switch (hotKeyMode) {
+      case "trackSize":
+        switch (e.key) {
+          ///////////////////////////////
+          // Change mode hot key
+          ///////////////////////////////
+          case "Escape":
+            setHotKeyMode("default");
+            break;
+          case "f": {
+            const [newRootShape, newFocusPath] = setTrackSizeAt(
+              rootShape,
+              focusPath,
+              "1fr"
+            );
+            setRootShape(newRootShape);
+            setFocusPath(newFocusPath);
+            setHotKeyMode("default");
+            break;
+          }
+          case "a": {
+            const [newRootShape, newFocusPath] = setTrackSizeAt(
+              rootShape,
+              focusPath,
+              "auto"
+            );
+            setRootShape(newRootShape);
+            setFocusPath(newFocusPath);
+            setHotKeyMode("default");
+            break;
+          }
+        }
         break;
 
-      ///////////////////////////////
-      // Layout change hot keys
-      ///////////////////////////////
-      case "g": {
-        const [newRootShape, newFocusPath] = wrapIntoContainer1D(
-          rootShape,
-          focusPath
-        );
-        setRootShape(newRootShape);
-        setFocusPath(newFocusPath);
+      case "default":
+        switch (e.key) {
+          ///////////////////////////////
+          // Change mode hot key
+          ///////////////////////////////
+          case "t":
+            setHotKeyMode("trackSize");
+            break;
+
+          ///////////////////////////////
+          // Focus move hot keys
+          ///////////////////////////////
+          case "i":
+            setFocusPath(focusInside(focusPath, rootShape));
+            break;
+          case "o":
+            setFocusPath(focusOutside(focusPath, rootShape));
+            break;
+          case "h":
+            setFocusPath(focusPrev(focusPath, rootShape));
+            break;
+          case "l":
+            setFocusPath(focusNext(focusPath, rootShape));
+            break;
+
+          ///////////////////////////////
+          // Layout change hot keys
+          ///////////////////////////////
+          case "g": {
+            const [newRootShape, newFocusPath] = wrapIntoContainer1D(
+              rootShape,
+              focusPath
+            );
+            setRootShape(newRootShape);
+            setFocusPath(newFocusPath);
+            break;
+          }
+          case "u": {
+            const [newRootShape, newFocusPath] = unwrap(rootShape, focusPath);
+            setRootShape(newRootShape);
+            setFocusPath(newFocusPath);
+            break;
+          }
+          case "v":
+            //change the current focused container to vertical 1D
+            break;
+          case "h":
+            //change the current focused container to horizontal 1D
+            break;
+          case "1": {
+            //change the number of elements
+            const [newRootShape] = changeChildrenSize(rootShape, focusPath, 1);
+            setRootShape(newRootShape);
+            break;
+          }
+          case "2": {
+            //change the number of elements
+            const [newRootShape] = changeChildrenSize(rootShape, focusPath, 2);
+            setRootShape(newRootShape);
+            break;
+          }
+          case "3": {
+            //change the number of elements
+            const [newRootShape] = changeChildrenSize(rootShape, focusPath, 3);
+            setRootShape(newRootShape);
+            break;
+          }
+          case "4": {
+            //change the number of elements
+            const [newRootShape] = changeChildrenSize(rootShape, focusPath, 4);
+            setRootShape(newRootShape);
+            break;
+          }
+        }
+
         break;
-      }
-      case "u": {
-        const [newRootShape, newFocusPath] = unwrap(rootShape, focusPath);
-        setRootShape(newRootShape);
-        setFocusPath(newFocusPath);
-        break;
-      }
-      case "v":
-        //change the current focused container to vertical 1D
-        break;
-      case "h":
-        //change the current focused container to horizontal 1D
-        break;
-      case "1": {
-        //change the number of elements
-        const [newRootShape] = changeChildrenSize(rootShape, focusPath, 1);
-        setRootShape(newRootShape);
-        break;
-      }
-      case "2": {
-        //change the number of elements
-        const [newRootShape] = changeChildrenSize(rootShape, focusPath, 2);
-        setRootShape(newRootShape);
-        break;
-      }
-      case "3": {
-        //change the number of elements
-        const [newRootShape] = changeChildrenSize(rootShape, focusPath, 3);
-        setRootShape(newRootShape);
-        break;
-      }
-      case "4": {
-        //change the number of elements
-        const [newRootShape] = changeChildrenSize(rootShape, focusPath, 4);
-        setRootShape(newRootShape);
-        break;
-      }
     }
   }
 

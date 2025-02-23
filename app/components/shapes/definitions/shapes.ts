@@ -1,6 +1,6 @@
 export type Path = string[];
 
-export type trackSize = "auto" | "1fr";
+export type TrackSize = "auto" | "1fr";
 
 export type Padding = {
   topPx: number;
@@ -18,7 +18,7 @@ export type Contanier1DShape = {
   id: string;
 
   direction: Direction;
-  trackSizes: trackSize[];
+  trackSizes: TrackSize[];
 
   widthPx?: number;
   heightPx?: number;
@@ -136,7 +136,7 @@ export function findShape(rootShape: Shape, path: Path): Shape | undefined {
   return findShapeRecursive(rootShape, path);
 }
 
-export function parentPath(path: Path): Path {
+export function getParentPath(path: Path): Path {
   const newPath = [...path];
   newPath.pop();
   return newPath;
@@ -165,7 +165,7 @@ export function focusOutside(path: Path, shape: Shape): Path {
   if (path.length <= 1) {
     return path;
   } else {
-    return parentPath(path);
+    return getParentPath(path);
   }
 }
 
@@ -174,7 +174,7 @@ export function focusNext(path: Path, rootShape: Shape): Path {
     return path; // path is empty or the root. return the unchanged path
   }
 
-  const parent = findShape(rootShape, parentPath(path));
+  const parent = findShape(rootShape, getParentPath(path));
   if (!parent) {
     return path; // not found, return the unchanged path
   }
@@ -186,7 +186,7 @@ export function focusNext(path: Path, rootShape: Shape): Path {
 
       if (currentIndex < parent.children.length - 1) {
         const next = parent.children[currentIndex + 1];
-        return [...parentPath(path), next.id];
+        return [...getParentPath(path), next.id];
       } else {
         return path; // no more next child, return the unchanged path
       }
@@ -200,7 +200,7 @@ export function focusPrev(path: Path, rootShape: Shape): Path {
     return path; // path is empty or the root. return the unchanged path
   }
 
-  const parent = findShape(rootShape, parentPath(path));
+  const parent = findShape(rootShape, getParentPath(path));
   if (!parent) {
     return path; // not found, return the unchanged path
   }
@@ -212,7 +212,7 @@ export function focusPrev(path: Path, rootShape: Shape): Path {
 
       if (0 < currentIndex) {
         const prev = parent.children[currentIndex - 1];
-        return [...parentPath(path), prev.id];
+        return [...getParentPath(path), prev.id];
       } else {
         return path; // no prev child, return the unchanged path
       }
@@ -322,6 +322,49 @@ export function findChildIndex(
   return -1;
 }
 
+export function setTrackSize(
+  shape: Contanier1DShape,
+  targetId: string,
+  trackSize: TrackSize
+): Contanier1DShape {
+  const targetIndex = findChildIndex(shape, targetId);
+  if (targetIndex < 0) {
+    return shape; // return unchanged shape
+  }
+
+  const newShape = shallowCopyShape(shape);
+  newShape.trackSizes = [];
+  for (let i = 0; i < shape.trackSizes.length; i++) {
+    if (i === targetIndex) {
+      newShape.trackSizes.push(trackSize);
+    } else {
+      newShape.trackSizes.push(shape.trackSizes[i]);
+    }
+  }
+
+  return newShape;
+}
+
+export function setTrackSizes(
+  shape: Contanier1DShape,
+  targetId: string,
+  trackSizes: TrackSize[]
+): Contanier1DShape {
+  const targetIndex = findChildIndex(shape, targetId);
+  if (targetIndex < 0) {
+    return shape; // return unchanged shape
+  }
+
+  if (trackSizes.length !== shape.trackSizes.length) {
+    return shape; // return unchanged shape
+  }
+
+  const newShape = shallowCopyShape(shape);
+  newShape.trackSizes = [...trackSizes];
+
+  return newShape;
+}
+
 /////////////////////////////////////////////////////////////////
 // Root shape functions
 /////////////////////////////////////////////////////////////////
@@ -339,7 +382,7 @@ export function replaceShape(
   const newRootShape = copyShape(rootShape);
 
   const target = findShape(newRootShape, focusPath);
-  const parent = findShape(newRootShape, parentPath(focusPath));
+  const parent = findShape(newRootShape, getParentPath(focusPath));
   if (!target || !parent) {
     return [rootShape, focusPath]; // failed to find target or parent, return unchanged rootShape
   }
@@ -351,7 +394,7 @@ export function replaceShape(
         return [rootShape, focusPath]; // failed to find target or parent, return unchanged rootShape;
       } else {
         parent.children[targetIndex] = newShape;
-        const newPath = pathAppend(parentPath(focusPath), newShape.id);
+        const newPath = pathAppend(getParentPath(focusPath), newShape.id);
         return [newRootShape, newPath];
       }
     case "circle":
@@ -410,6 +453,28 @@ export function changeChildrenSize(
   }
 }
 
+export function setTrackSizeAt(
+  rootShape: Shape,
+  focusPath: Path,
+  trackSize: TrackSize
+): [Shape, Path] {
+  const parentPath = getParentPath(focusPath);
+  const parent = findShape(rootShape, parentPath);
+  if (!parent) {
+    return [rootShape, focusPath]; // failed to find target, return unchanged rootShape
+  }
+
+  switch (parent.shapeType) {
+    case "container1D":
+      const targetId = pathEnd(focusPath);
+      const newParent = setTrackSize(parent, targetId, trackSize);
+      const [newRootShape] = replaceShape(rootShape, parentPath, newParent);
+      return [newRootShape, focusPath];
+    case "circle":
+      return [rootShape, focusPath]; // return unchanged rootShape
+  }
+}
+
 /////////////////////////////////////////////////////////////////
 // Circle functions
 /////////////////////////////////////////////////////////////////
@@ -428,7 +493,7 @@ export function createCircle(radiusPx: number): CircleShape {
 // Shape functions
 /////////////////////////////////////////////////////////////////
 
-export function copyShape(s: Shape): Shape {
+export function copyShape<S extends Shape>(s: S): S {
   switch (s.shapeType) {
     case "circle":
       return { ...s };
@@ -438,6 +503,10 @@ export function copyShape(s: Shape): Shape {
         children: s.children.map(copyShape),
       };
   }
+}
+
+export function shallowCopyShape<S extends Shape>(s: S): S {
+  return { ...s };
 }
 
 export function copyContainer1D(s: Contanier1DShape): Contanier1DShape {
