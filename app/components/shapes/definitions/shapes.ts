@@ -376,13 +376,13 @@ export function changeChildrenSize(
 ): [Shape, Path] {
   const target = findShape(rootShape, focusPath);
   if (!target) {
-    return [rootShape, focusPath]; // failed to find target or parent, return unchanged rootShape
+    return [rootShape, focusPath]; // failed to find target, return unchanged rootShape
   }
 
   switch (target.shapeType) {
     case "container1D":
-      const newShape = changeContainer1DSize(target, numChildren);
-      return [newShape, focusPath];
+      const newTraget = changeContainer1DSize(target, numChildren);
+      return replaceShape(rootShape, focusPath, newTraget);
     case "circle":
       return [rootShape, focusPath]; // return unchanged rootShape
   }
