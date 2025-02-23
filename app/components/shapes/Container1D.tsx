@@ -4,12 +4,13 @@ import styles from "./Container1D.module.css";
 import {
   Contanier1DShape,
   FocusProps,
+  NestProps,
   pathAppend,
   pathMatched,
   Shape,
 } from "./definitions/shapes";
 
-type InnerSwitchProps = Shape & FocusProps;
+type InnerSwitchProps = Shape & FocusProps & NestProps;
 
 // InnerSwitch component has to be in the same file as Container1DHorizontal/Vertical
 // Otherwise, mutual import (i.e. cyclic reference) error.
@@ -27,11 +28,17 @@ export function InnerSwitch(props: InnerSwitchProps): JSX.Element {
   }
 }
 
-type Container1DProps = Contanier1DShape & FocusProps;
+type Container1DProps = Contanier1DShape & FocusProps & NestProps;
 
 export function Container1DHorizontal(props: Container1DProps) {
   const path = pathAppend(props.parentPath, props.id);
   const focused = props.focusPath && pathMatched(path, props.focusPath);
+
+  const border = focused
+    ? "solid 2px yellow"
+    : props.nestLevel > 1
+    ? "dashed 2px grey"
+    : undefined;
 
   return (
     <div
@@ -49,7 +56,7 @@ export function Container1DHorizontal(props: Container1DProps) {
         paddingRight: `${props.padding.rightPx}px`,
 
         backgroundColor: props.backgroundColor,
-        border: focused ? "solid 2px yellow" : undefined,
+        border: border,
       }}
     >
       {props.children.map((childShape) => {
@@ -60,6 +67,7 @@ export function Container1DHorizontal(props: Container1DProps) {
             {...childShape}
             parentPath={path}
             focusPath={props.focusPath}
+            nestLevel={props.nestLevel + 1}
           />
           // </div>
         );
@@ -100,6 +108,7 @@ export function Container1DVertical(props: Container1DProps) {
             {...childShape}
             parentPath={path}
             focusPath={props.focusPath}
+            nestLevel={props.nestLevel + 1}
           />
           // </div>
         );

@@ -53,6 +53,10 @@ export type FocusProps = {
   focusPath?: Path;
 };
 
+export type NestProps = {
+  nestLevel: number;
+};
+
 type ShapeModel = {
   root: Contanier1DShape;
   focus?: Path;

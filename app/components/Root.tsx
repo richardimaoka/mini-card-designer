@@ -96,6 +96,7 @@ export function Root(props: Props) {
           {...rootShape}
           parentPath={[]}
           focusPath={focusPath}
+          nestLevel={1}
         />
       );
     default:
