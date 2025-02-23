@@ -152,8 +152,6 @@ export function focusInside(path: Path, rootShape: Shape): Path {
     return path; // not found, return the unchanged path
   }
 
-  console.log("focusInside", shape);
-
   switch (shape.shapeType) {
     case "container1D":
       const childInside = shape.children[0];
@@ -333,6 +331,11 @@ export function replaceShape(
   focusPath: Path,
   newShape: Shape
 ): [Shape, Path] {
+  // If focusPath is on the root, simply returning the newShape will make replacement
+  if (focusPath.length === 1) {
+    return [newShape, focusPath];
+  }
+
   const newRootShape = copyShape(rootShape);
 
   const target = findShape(newRootShape, focusPath);

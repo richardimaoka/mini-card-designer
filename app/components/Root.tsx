@@ -102,7 +102,6 @@ export function Root(props: Props) {
   }
 
   useEffect(() => {
-    console.log([rootShape, focusPath, hotKeyMode]);
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [rootShape, focusPath, hotKeyMode]);
