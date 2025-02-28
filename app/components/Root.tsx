@@ -123,21 +123,22 @@ export function Root(props: Props) {
             setRootShape(newRootShape);
             break;
           }
-          case "2": {
+          case "2":
+          case "3":
+          case "4":
+          case "5":
+          case "6":
+          case "7":
+          case "8":
+          case "9": {
+            const num = Number(e.key);
+
             //change the number of elements
-            const [newRootShape] = changeChildrenSize(rootShape, focusPath, 2);
-            setRootShape(newRootShape);
-            break;
-          }
-          case "3": {
-            //change the number of elements
-            const [newRootShape] = changeChildrenSize(rootShape, focusPath, 3);
-            setRootShape(newRootShape);
-            break;
-          }
-          case "4": {
-            //change the number of elements
-            const [newRootShape] = changeChildrenSize(rootShape, focusPath, 4);
+            const [newRootShape] = changeChildrenSize(
+              rootShape,
+              focusPath,
+              num
+            );
             setRootShape(newRootShape);
             break;
           }
