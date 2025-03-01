@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Container1D } from "./shapes/Container1D";
+import { Grid1D } from "./shapes/Grid1D";
 import {
   changeChildrenSize,
-  createContainer1D,
+  createGrid1D,
   createEmptyShape,
   findRightPath,
   focusInside,
@@ -14,7 +14,7 @@ import {
   setTrackSizeAt,
   Shape,
   unwrap,
-  wrapIntoContainer1D,
+  wrapIntoGrid1D,
 } from "./shapes/definitions/shapes";
 import path from "path";
 
@@ -24,16 +24,16 @@ type HotKeyMode = "default" | "trackSize" | "select" | "direction";
 
 export function Root(props: Props) {
   const emptyShape = createEmptyShape();
-  const container = createContainer1D("horizontal", "white", [emptyShape]);
-  container.widthPx = 600;
+  const grid = createGrid1D("horizontal", "white", [emptyShape]);
+  grid.widthPx = 600;
 
-  const [rootShape, setRootShape] = useState<Shape>(container);
+  const [rootShape, setRootShape] = useState<Shape>(grid);
   const [focusPath, setFocusPath] = useState<Path>([rootShape.id]);
   const [hotKeyMode, setHotKeyMode] = useState<HotKeyMode>("default");
   const [selection, setSelection] = useState<Path[]>([]);
 
   // const focused = ...
-  // const focusParent: Container1D | null = ...
+  // const focusParent: Grid1D | null = ...
   // const focusIndex
 
   // argument `e` is NOT React.KeyboardEvent as it's passed to document.addEventListner
@@ -52,8 +52,7 @@ export function Root(props: Props) {
       case "direction":
         switch (e.key) {
           case "v": {
-            console.log("change direction to v");
-            //change the current focused container to vertical 1D
+            //change the current focused grid to vertical 1D
             const [newRootShape, newFocusPath] = setDirection(
               rootShape,
               focusPath,
@@ -65,7 +64,7 @@ export function Root(props: Props) {
             break;
           }
           case "h": {
-            //change the current focused container to horizontal 1D
+            //change the current focused grid to horizontal 1D
             const [newRootShape, newFocusPath] = setDirection(
               rootShape,
               focusPath,
@@ -160,7 +159,7 @@ export function Root(props: Props) {
           // Layout change hot keys
           ///////////////////////////////
           case "g": {
-            const [newRootShape, newFocusPath] = wrapIntoContainer1D(
+            const [newRootShape, newFocusPath] = wrapIntoGrid1D(
               rootShape,
               focusPath
             );
@@ -210,9 +209,9 @@ export function Root(props: Props) {
   }, [rootShape, focusPath, hotKeyMode]);
 
   switch (rootShape.shapeType) {
-    case "container1D":
+    case "grid1D":
       return (
-        <Container1D
+        <Grid1D
           {...rootShape}
           parentPath={[]}
           focusPath={focusPath}

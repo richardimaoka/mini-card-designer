@@ -1,8 +1,8 @@
 import { CSSProperties, JSX } from "react";
 import { Circle } from "./Circle";
-import styles from "./Container1D.module.css";
+import styles from "./Grid1D.module.css";
 import {
-  Contanier1DShape,
+  Grid1DShape,
   FocusProps,
   NestProps,
   pathAppend,
@@ -13,7 +13,7 @@ import { Empty } from "./Empty";
 
 type InnerSwitchProps = Shape & FocusProps & NestProps;
 
-// InnerSwitch component has to be in the same file as Container1DHorizontal/Vertical
+// InnerSwitch component has to be in the same file as Grid1D.
 // Otherwise, mutual import (i.e. cyclic reference) error.
 export function InnerSwitch(props: InnerSwitchProps): JSX.Element {
   switch (props.shapeType) {
@@ -21,12 +21,12 @@ export function InnerSwitch(props: InnerSwitchProps): JSX.Element {
       return <Circle {...props} />;
     case "empty":
       return <Empty {...props} />;
-    case "container1D":
-      return <Container1D {...props} />;
+    case "grid1D":
+      return <Grid1D {...props} />;
   }
 }
 
-function gridStyles(shape: Contanier1DShape): CSSProperties {
+function gridStyles(shape: Grid1DShape): CSSProperties {
   switch (shape.direction) {
     case "horizontal":
       return {
@@ -41,9 +41,9 @@ function gridStyles(shape: Contanier1DShape): CSSProperties {
   }
 }
 
-type Container1DProps = Contanier1DShape & FocusProps & NestProps;
+type Grid1DProps = Grid1DShape & FocusProps & NestProps;
 
-export function Container1D(props: Container1DProps) {
+export function Grid1D(props: Grid1DProps) {
   const path = pathAppend(props.parentPath, props.id);
   const focused = props.focusPath && pathMatched(path, props.focusPath);
 

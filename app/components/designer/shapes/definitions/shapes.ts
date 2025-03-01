@@ -1,4 +1,4 @@
-import { Container1D } from "../Container1D";
+import { Grid1D } from "../Grid1D";
 
 export type Path = string[];
 
@@ -15,8 +15,8 @@ export type Direction = "vertical" | "horizontal";
 
 export type BgColor = "white" | "#e6e6e6";
 
-export type Contanier1DShape = {
-  shapeType: "container1D";
+export type Grid1DShape = {
+  shapeType: "grid1D";
   id: string;
 
   direction: Direction;
@@ -52,9 +52,9 @@ export type CircleShape = {
 // type Card2d
 // type List
 
-export type Shape = StandaloneShape | ContainerShape;
+export type Shape = StandaloneShape | GridShape;
 export type StandaloneShape = CircleShape | EmptyShape;
-export type ContainerShape = Contanier1DShape;
+export type GridShape = Grid1DShape;
 
 export type FocusProps = {
   parentPath: Path;
@@ -66,7 +66,7 @@ export type NestProps = {
 };
 
 type ShapeModel = {
-  root: Contanier1DShape;
+  root: Grid1DShape;
   focus?: Path;
 };
 
@@ -79,7 +79,7 @@ function focus(model: ShapeModel, path: Path) {}
 
 // replace to Circle, Rectangle, Square, Card...
 
-function replace1(container: Contanier1DShape, at: number, shape: Shape) {}
+function replace1(grid: Grid1DShape, at: number, shape: Shape) {}
 function wrap(shape: Shape) {}
 
 /////////////////////////////////////////////////////////////////
@@ -119,7 +119,7 @@ function findShapeRecursive(
       return remainingPath[0] === shape.id ? shape : undefined;
     case 2:
       switch (shape.shapeType) {
-        case "container1D":
+        case "grid1D":
           const child = shape.children.find((c) => c.id === remainingPath[1]);
           return child;
         case "circle":
@@ -127,7 +127,7 @@ function findShapeRecursive(
       }
     default:
       switch (shape.shapeType) {
-        case "container1D":
+        case "grid1D":
           const child = shape.children.find((c) => c.id === remainingPath[1]);
           if (!child) {
             return undefined;
@@ -161,7 +161,7 @@ export function focusInside(path: Path, rootShape: Shape): Path {
   }
 
   switch (shape.shapeType) {
-    case "container1D":
+    case "grid1D":
       const childInside = shape.children[0];
       return [...path, childInside.id];
     case "circle":
@@ -190,7 +190,7 @@ export function findRightPath(path: Path, rootShape: Shape): Path | undefined {
   }
 
   switch (parent.shapeType) {
-    case "container1D":
+    case "grid1D":
       const childId = path[path.length - 1];
       const childIndex = parent.children.findIndex((c) => c.id === childId);
 
@@ -202,11 +202,11 @@ export function findRightPath(path: Path, rootShape: Shape): Path | undefined {
       }
     case "circle":
       throw new Error(
-        "toRight: parent is not a container - this must be impossible!"
+        "toRight: parent is not a grid - this must be impossible!"
       );
     case "empty":
       throw new Error(
-        "toRight: parent is not a container - this must be impossible!"
+        "toRight: parent is not a grid - this must be impossible!"
       );
   }
 }
@@ -222,7 +222,7 @@ export function focusNext(path: Path, rootShape: Shape): Path {
   }
 
   switch (parent.shapeType) {
-    case "container1D":
+    case "grid1D":
       const pathEnd = path[path.length - 1];
       const currentIndex = parent.children.findIndex((c) => c.id === pathEnd);
 
@@ -234,11 +234,11 @@ export function focusNext(path: Path, rootShape: Shape): Path {
       }
     case "circle":
       throw new Error(
-        "focusPrev: parent is not a container - this must be impossible!"
+        "focusPrev: parent is not a grid - this must be impossible!"
       );
     case "empty":
       throw new Error(
-        "focusPrev: parent is not a container - this must be impossible!"
+        "focusPrev: parent is not a grid - this must be impossible!"
       );
   }
 }
@@ -254,7 +254,7 @@ export function findLeftPath(path: Path, rootShape: Shape): Path | undefined {
   }
 
   switch (parent.shapeType) {
-    case "container1D":
+    case "grid1D":
       const childId = path[path.length - 1];
       const childIndex = parent.children.findIndex((c) => c.id === childId);
 
@@ -266,11 +266,11 @@ export function findLeftPath(path: Path, rootShape: Shape): Path | undefined {
       }
     case "circle":
       throw new Error(
-        "toRight: parent is not a container - this must be impossible!"
+        "toRight: parent is not a grid - this must be impossible!"
       );
     case "empty":
       throw new Error(
-        "toRight: parent is not a container - this must be impossible!"
+        "toRight: parent is not a grid - this must be impossible!"
       );
   }
 }
@@ -286,7 +286,7 @@ export function focusPrev(path: Path, rootShape: Shape): Path {
   }
 
   switch (parent.shapeType) {
-    case "container1D":
+    case "grid1D":
       const pathEnd = path[path.length - 1];
       const currentIndex = parent.children.findIndex((c) => c.id === pathEnd);
 
@@ -298,28 +298,28 @@ export function focusPrev(path: Path, rootShape: Shape): Path {
       }
     case "circle":
       throw new Error(
-        "focusPrev: parent is not a container - this must be impossible!"
+        "focusPrev: parent is not a grid - this must be impossible!"
       );
     case "empty":
       throw new Error(
-        "focusPrev: parent is not a container - this must be impossible!"
+        "focusPrev: parent is not a grid - this must be impossible!"
       );
   }
 }
 
 /////////////////////////////////////////////////////////////////
-// Container1D  functions
+// Grid functions
 /////////////////////////////////////////////////////////////////
 
-export function createContainer1D(
+export function createGrid1D(
   direction: Direction,
   bgColor: BgColor | undefined,
   children: Shape[]
-): Contanier1DShape {
+): Grid1DShape {
   const id = crypto.randomUUID();
 
   return {
-    shapeType: "container1D",
+    shapeType: "grid1D",
     direction: direction,
 
     id: id,
@@ -340,47 +340,47 @@ export function createContainer1D(
   };
 }
 
-export function isContainer1D(shape: Shape): shape is Contanier1DShape {
-  return shape.shapeType === "container1D";
+export function isGrid1D(shape: Shape): shape is Grid1DShape {
+  return shape.shapeType === "grid1D";
 }
 
-export function updateContainerWidth(
-  shape: Contanier1DShape,
+export function updateGridWidth(
+  shape: Grid1DShape,
   widthPx: number
-): Contanier1DShape {
-  const updatedShape = copyContainer1D(shape);
+): Grid1DShape {
+  const updatedShape = copyGrid1D(shape);
   updatedShape.widthPx = widthPx;
 
   return updatedShape;
 }
 
-export function updateContainerHeight(
-  shape: Contanier1DShape,
+export function updateGridHeight(
+  shape: Grid1DShape,
   heightPx: number
-): Contanier1DShape {
-  const updatedShape = copyContainer1D(shape);
+): Grid1DShape {
+  const updatedShape = copyGrid1D(shape);
   updatedShape.heightPx = heightPx;
 
   return updatedShape;
 }
 
-export function updateContainerWidthHeight(
-  shape: Contanier1DShape,
+export function updateGridWidthHeight(
+  shape: Grid1DShape,
   widthPx: number,
   heightPx: number
-): Contanier1DShape {
-  const updatedShape = copyContainer1D(shape);
+): Grid1DShape {
+  const updatedShape = copyGrid1D(shape);
   updatedShape.widthPx = widthPx;
   updatedShape.heightPx = heightPx;
 
   return updatedShape;
 }
 
-export function changeContainer1DSize(
-  shape: Contanier1DShape,
+export function changeGrid1DSize(
+  shape: Grid1DShape,
   numChildren: number
-): Contanier1DShape {
-  const newShape = copyContainer1D(shape);
+): Grid1DShape {
+  const newShape = copyGrid1D(shape);
 
   // Children size to be numChildren
   newShape.children = [];
@@ -398,10 +398,7 @@ export function changeContainer1DSize(
   return newShape;
 }
 
-export function findChildIndex(
-  shape: Contanier1DShape,
-  targetId: string
-): number {
+export function findChildIndex(shape: Grid1DShape, targetId: string): number {
   for (let index = 0; index < shape.children.length; index++) {
     const c = shape.children[index];
     if (c.id === targetId) {
@@ -413,10 +410,10 @@ export function findChildIndex(
 }
 
 export function setTrackSize(
-  shape: Contanier1DShape,
+  shape: Grid1DShape,
   targetId: string,
   trackSize: TrackSize
-): Contanier1DShape {
+): Grid1DShape {
   const targetIndex = findChildIndex(shape, targetId);
   if (targetIndex < 0) {
     return shape; // return unchanged shape
@@ -436,10 +433,10 @@ export function setTrackSize(
 }
 
 export function setTrackSizes(
-  shape: Contanier1DShape,
+  shape: Grid1DShape,
   targetId: string,
   trackSizes: TrackSize[]
-): Contanier1DShape {
+): Grid1DShape {
   const targetIndex = findChildIndex(shape, targetId);
   if (targetIndex < 0) {
     return shape; // return unchanged shape
@@ -456,9 +453,9 @@ export function setTrackSizes(
 }
 
 export function changeDirection(
-  shape: Contanier1DShape,
+  shape: Grid1DShape,
   direction: Direction
-): Contanier1DShape {
+): Grid1DShape {
   const newShape = shallowCopyShape(shape);
   newShape.direction = direction;
 
@@ -469,7 +466,7 @@ export function changeDirection(
 // Root shape functions
 /////////////////////////////////////////////////////////////////
 
-// make it container1D specific, and the root component have context-specific hotkey branches?
+// make it grid1D specific, and the root component have context-specific hotkey branches?
 export function replaceShape(
   rootShape: Shape,
   focusPath: Path,
@@ -489,7 +486,7 @@ export function replaceShape(
   }
 
   switch (parent.shapeType) {
-    case "container1D":
+    case "grid1D":
       const targetIndex = findChildIndex(parent, target.id);
       if (targetIndex < 0) {
         return [rootShape, focusPath]; // failed to find target or parent, return unchanged rootShape;
@@ -516,7 +513,7 @@ export function setDirection(
   }
 
   switch (target.shapeType) {
-    case "container1D":
+    case "grid1D":
       const changed = changeDirection(target, direction);
       return replaceShape(rootShape, focusPath, changed);
     case "circle":
@@ -526,7 +523,7 @@ export function setDirection(
   }
 }
 
-export function wrapIntoContainer1D(
+export function wrapIntoGrid1D(
   rootShape: Shape,
   focusPath: Path
 ): [Shape, Path] {
@@ -535,11 +532,11 @@ export function wrapIntoContainer1D(
     return [rootShape, focusPath]; // failed to find target or parent, return unchanged rootShape
   }
 
-  const wrapped = createContainer1D("horizontal", undefined, [target]);
+  const wrapped = createGrid1D("horizontal", undefined, [target]);
   return replaceShape(rootShape, focusPath, wrapped);
 }
 
-// make it container1D specific, and the root component have context-specific hotkey branches?
+// make it grid1D specific, and the root component have context-specific hotkey branches?
 export function unwrap(rootShape: Shape, focusPath: Path): [Shape, Path] {
   const target = findShape(rootShape, focusPath);
   if (!target) {
@@ -547,7 +544,7 @@ export function unwrap(rootShape: Shape, focusPath: Path): [Shape, Path] {
   }
 
   switch (target.shapeType) {
-    case "container1D":
+    case "grid1D":
       if (target.children.length !== 1) {
         return [rootShape, focusPath]; // failed to unwrap, return unchanged rootShape
       } else {
@@ -561,7 +558,7 @@ export function unwrap(rootShape: Shape, focusPath: Path): [Shape, Path] {
   }
 }
 
-// make it container1D specific, and the root component have context-specific hotkey branches?
+// make it grid1D specific, and the root component have context-specific hotkey branches?
 export function changeChildrenSize(
   rootShape: Shape,
   focusPath: Path,
@@ -573,8 +570,8 @@ export function changeChildrenSize(
   }
 
   switch (target.shapeType) {
-    case "container1D":
-      const newTraget = changeContainer1DSize(target, numChildren);
+    case "grid1D":
+      const newTraget = changeGrid1DSize(target, numChildren);
       return replaceShape(rootShape, focusPath, newTraget);
     case "circle":
       return [rootShape, focusPath]; // return unchanged rootShape
@@ -583,7 +580,7 @@ export function changeChildrenSize(
   }
 }
 
-// make it container1D specific, and the root component have context-specific hotkey branches?
+// make it grid1D specific, and the root component have context-specific hotkey branches?
 export function setTrackSizeAt(
   rootShape: Shape,
   focusPath: Path,
@@ -596,7 +593,7 @@ export function setTrackSizeAt(
   }
 
   switch (parent.shapeType) {
-    case "container1D":
+    case "grid1D":
       const targetId = pathEnd(focusPath);
       const newParent = setTrackSize(parent, targetId, trackSize);
       const [newRootShape] = replaceShape(rootShape, parentPath, newParent);
@@ -645,7 +642,7 @@ export function copyShape<S extends Shape>(s: S): S {
       return { ...s };
     case "empty":
       return { ...s };
-    case "container1D":
+    case "grid1D":
       return {
         ...s,
         children: s.children.map(copyShape),
@@ -657,7 +654,7 @@ export function shallowCopyShape<S extends Shape>(s: S): S {
   return { ...s };
 }
 
-export function copyContainer1D(s: Contanier1DShape): Contanier1DShape {
+export function copyGrid1D(s: Grid1DShape): Grid1DShape {
   return {
     ...s,
     children: s.children.map(copyShape),
