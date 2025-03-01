@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Container1DHorizontal } from "./shapes/Container1D";
+import { Container1D } from "./shapes/Container1D";
 import {
   changeChildrenSize,
   createContainer1D,
@@ -212,7 +212,7 @@ export function Root(props: Props) {
   switch (rootShape.shapeType) {
     case "container1D":
       return (
-        <Container1DHorizontal
+        <Container1D
           {...rootShape}
           parentPath={[]}
           focusPath={focusPath}

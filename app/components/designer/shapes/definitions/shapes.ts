@@ -1,4 +1,4 @@
-import { Container1DHorizontal } from "../Container1D";
+import { Container1D } from "../Container1D";
 
 export type Path = string[];
 
