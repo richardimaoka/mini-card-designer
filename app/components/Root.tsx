@@ -17,7 +17,7 @@ import {
 
 type Props = {};
 
-type HotKeyMode = "default" | "trackSize";
+type HotKeyMode = "default" | "trackSize" | "select";
 
 export function Root(props: Props) {
   const emptyShape = createEmptyShape();
@@ -27,6 +27,17 @@ export function Root(props: Props) {
   const [rootShape, setRootShape] = useState<Shape>(container);
   const [focusPath, setFocusPath] = useState<Path>([rootShape.id]);
   const [hotKeyMode, setHotKeyMode] = useState<HotKeyMode>("default");
+  const [selection, setSelection] = useState<Path[]>([]);
+
+  // argument `e` is NOT React.KeyboardEvent as it's passed to document.addEventListner
+  function onKeyUp(e: KeyboardEvent) {
+    if (hotKeyMode === "select") {
+      switch (e.key) {
+        case "Shift":
+          setSelection([]);
+      }
+    }
+  }
 
   // argument `e` is NOT React.KeyboardEvent as it's passed to document.addEventListner
   function onKeyDown(e: KeyboardEvent) {
@@ -64,6 +75,19 @@ export function Root(props: Props) {
         }
         break;
 
+      case "select":
+        switch (e.key) {
+          ///////////////////////////////
+          // Focus move hot keys
+          ///////////////////////////////
+          case "h":
+            setFocusPath(focusPrev(focusPath, rootShape));
+            break;
+          case "l":
+            setFocusPath(focusNext(focusPath, rootShape));
+            break;
+        }
+
       case "default":
         switch (e.key) {
           ///////////////////////////////
@@ -71,6 +95,10 @@ export function Root(props: Props) {
           ///////////////////////////////
           case "t":
             setHotKeyMode("trackSize");
+            break;
+          case "Shift":
+            setHotKeyMode("select");
+            setSelection([focusPath]);
             break;
 
           ///////////////////////////////
@@ -113,12 +141,7 @@ export function Root(props: Props) {
           case "h":
             //change the current focused container to horizontal 1D
             break;
-          case "1": {
-            //change the number of elements
-            const [newRootShape] = changeChildrenSize(rootShape, focusPath, 1);
-            setRootShape(newRootShape);
-            break;
-          }
+          case "1":
           case "2":
           case "3":
           case "4":
@@ -146,7 +169,11 @@ export function Root(props: Props) {
 
   useEffect(() => {
     document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    document.addEventListener("keyup", onKeyUp);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("keydown", onKeyUp);
+    };
   }, [rootShape, focusPath, hotKeyMode]);
 
   switch (rootShape.shapeType) {
