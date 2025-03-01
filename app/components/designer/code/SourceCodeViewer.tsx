@@ -10,7 +10,7 @@ function innerSwitch(
   shape: Shape,
   indentLevel: number,
   indentBeginning: boolean
-): string {
+): string[] {
   switch (shape.shapeType) {
     case "grid1D":
       return grid1D(shape, indentLevel, indentBeginning);
@@ -25,31 +25,28 @@ function empty(
   shape: EmptyShape,
   indentLevel: number,
   indentBeginning: boolean
-): string {
+): string[] {
   const indent = "  ".repeat(indentLevel);
-  return indent + `<div className={styles.component}>empty</div>`;
+  return [indent + `<div className={styles.component}>empty</div>`];
 }
 
 function circle(
   shape: CircleShape,
   indentLevel: number,
   indentBeginning: boolean
-): string {
+): string[] {
   const indent = "  ".repeat(indentLevel);
-  return indent + `<div className={styles.component}>circle</div>`;
+  return [indent + `<div className={styles.component}>circle</div>`];
 }
 
 function grid1D(
   shape: Grid1DShape,
   indentLevel: number,
   indentBeginning: boolean
-): string {
+): string[] {
   const indent = "  ".repeat(indentLevel);
 
-  const childrenLines = "";
-  //  shape.children.map((x) =>
-  //   innerSwitch(x, indentLevel, indentBeginning)
-  // );
+  const childrenLines = shape.children.flatMap((x) => innerSwitch(x, 1, true));
 
   const lines = [
     `<div className={styles.component}>`,
@@ -57,9 +54,7 @@ function grid1D(
     `</div>`,
   ];
 
-  return lines
-    .map((l, i) => (i !== 0 || indentBeginning ? indent + l : l))
-    .join("\n");
+  return lines.map((l, i) => (i !== 0 || indentBeginning ? indent + l : l));
 }
 
 type Props = {
@@ -74,7 +69,7 @@ export function SourceCodeViewer(props: Props) {
   ): string {
     switch (shape.shapeType) {
       case "grid1D":
-        return grid1D(shape, indentLevel, indentBeginning);
+        return grid1D(shape, indentLevel, indentBeginning).join("\n");
       default:
         return "unavailable";
     }
@@ -87,9 +82,7 @@ export function SourceCodeViewer(props: Props) {
     ``,
     `export function Component(props: Props) {`,
     `  return (`,
-    `    <div className={styles.component}>`,
-    `      ${childrenString(props.rootShape, 3)}`,
-    `    </div>`,
+    `    ${childrenString(props.rootShape, 2)}`,
     `  )`,
     `}`,
   ];
