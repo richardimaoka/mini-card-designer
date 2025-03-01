@@ -1,6 +1,6 @@
 "use client";
 
-import { Root } from "./components/Root";
+import { Root } from "./components/designer/Root";
 import styles from "./page.module.css";
 
 export default function Page() {
