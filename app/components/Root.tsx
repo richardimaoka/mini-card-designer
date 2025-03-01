@@ -6,7 +6,7 @@ import {
   Contanier1DShape,
   copyContainer1D,
   copyShape,
-  createCircle,
+  createCircle as emptyShape,
   createContainer1D,
   focusInside,
   focusNext,
@@ -17,6 +17,7 @@ import {
   Shape,
   unwrap,
   wrapIntoContainer1D,
+  createEmptyShape,
 } from "./shapes/definitions/shapes";
 
 type Props = {};
@@ -24,8 +25,8 @@ type Props = {};
 type HotKeyMode = "default" | "trackSize";
 
 export function Root(props: Props) {
-  const circle = createCircle(16);
-  const container = createContainer1D("horizontal", "white", [circle]);
+  const emptyShape = createEmptyShape();
+  const container = createContainer1D("horizontal", "white", [emptyShape]);
   container.widthPx = 600;
 
   const [rootShape, setRootShape] = useState<Shape>(container);
