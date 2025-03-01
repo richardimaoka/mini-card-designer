@@ -179,6 +179,38 @@ export function focusOutside(path: Path, shape: Shape): Path {
   }
 }
 
+export function findRightPath(path: Path, rootShape: Shape): Path | undefined {
+  if (path.length <= 1) {
+    return undefined; // path is empty or the root. there is no path on the right
+  }
+
+  const parent = findShape(rootShape, getParentPath(path));
+  if (!parent) {
+    return undefined; // no parent found
+  }
+
+  switch (parent.shapeType) {
+    case "container1D":
+      const childId = path[path.length - 1];
+      const childIndex = parent.children.findIndex((c) => c.id === childId);
+
+      if (childIndex < parent.children.length - 1) {
+        const next = parent.children[childIndex + 1];
+        return [...getParentPath(path), next.id];
+      } else {
+        return undefined;
+      }
+    case "circle":
+      throw new Error(
+        "toRight: parent is not a container - this must be impossible!"
+      );
+    case "empty":
+      throw new Error(
+        "toRight: parent is not a container - this must be impossible!"
+      );
+  }
+}
+
 export function focusNext(path: Path, rootShape: Shape): Path {
   if (path.length <= 1) {
     return path; // path is empty or the root. return the unchanged path
@@ -207,6 +239,38 @@ export function focusNext(path: Path, rootShape: Shape): Path {
     case "empty":
       throw new Error(
         "focusPrev: parent is not a container - this must be impossible!"
+      );
+  }
+}
+
+export function findLeftPath(path: Path, rootShape: Shape): Path | undefined {
+  if (path.length <= 1) {
+    return undefined; // path is empty or the root. there is no path on the left
+  }
+
+  const parent = findShape(rootShape, getParentPath(path));
+  if (!parent) {
+    return undefined; // no parent found
+  }
+
+  switch (parent.shapeType) {
+    case "container1D":
+      const childId = path[path.length - 1];
+      const childIndex = parent.children.findIndex((c) => c.id === childId);
+
+      if (0 < childIndex) {
+        const prev = parent.children[childIndex - 1];
+        return [...getParentPath(path), prev.id];
+      } else {
+        return getParentPath(path);
+      }
+    case "circle":
+      throw new Error(
+        "toRight: parent is not a container - this must be impossible!"
+      );
+    case "empty":
+      throw new Error(
+        "toRight: parent is not a container - this must be impossible!"
       );
   }
 }
@@ -391,6 +455,16 @@ export function setTrackSizes(
   return newShape;
 }
 
+export function changeDirection(
+  shape: Contanier1DShape,
+  direction: Direction
+): Contanier1DShape {
+  const newShape = shallowCopyShape(shape);
+  newShape.direction = direction;
+
+  return newShape;
+}
+
 /////////////////////////////////////////////////////////////////
 // Root shape functions
 /////////////////////////////////////////////////////////////////
@@ -424,6 +498,27 @@ export function replaceShape(
         const newPath = pathAppend(getParentPath(focusPath), newShape.id);
         return [newRootShape, newPath];
       }
+    case "circle":
+      return [rootShape, focusPath]; // return unchanged rootShape
+    case "empty":
+      return [rootShape, focusPath]; // return unchanged rootShape
+  }
+}
+
+export function setDirection(
+  rootShape: Shape,
+  focusPath: Path,
+  direction: Direction
+): [Shape, Path] {
+  const target = findShape(rootShape, focusPath);
+  if (!target) {
+    return [rootShape, focusPath]; // failed to find target, return unchanged rootShape
+  }
+
+  switch (target.shapeType) {
+    case "container1D":
+      const changed = changeDirection(target, direction);
+      return replaceShape(rootShape, focusPath, changed);
     case "circle":
       return [rootShape, focusPath]; // return unchanged rootShape
     case "empty":

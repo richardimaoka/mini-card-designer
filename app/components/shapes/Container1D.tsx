@@ -80,6 +80,7 @@ export function Container1DHorizontal(props: Container1DProps) {
 }
 
 export function Container1DVertical(props: Container1DProps) {
+  console.log("Container1DVertical");
   const path = pathAppend(props.parentPath, props.id);
   const focused = props.focusPath && pathMatched(path, props.focusPath);
 

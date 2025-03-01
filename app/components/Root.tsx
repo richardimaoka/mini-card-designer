@@ -4,20 +4,23 @@ import {
   changeChildrenSize,
   createContainer1D,
   createEmptyShape,
+  findRightPath,
   focusInside,
   focusNext,
   focusOutside,
   focusPrev,
   Path,
+  setDirection,
   setTrackSizeAt,
   Shape,
   unwrap,
   wrapIntoContainer1D,
 } from "./shapes/definitions/shapes";
+import path from "path";
 
 type Props = {};
 
-type HotKeyMode = "default" | "trackSize" | "select";
+type HotKeyMode = "default" | "trackSize" | "select" | "direction";
 
 export function Root(props: Props) {
   const emptyShape = createEmptyShape();
@@ -46,6 +49,37 @@ export function Root(props: Props) {
   // argument `e` is NOT React.KeyboardEvent as it's passed to document.addEventListner
   function onKeyDown(e: KeyboardEvent) {
     switch (hotKeyMode) {
+      case "direction":
+        switch (e.key) {
+          case "v": {
+            console.log("change direction to v");
+            //change the current focused container to vertical 1D
+            const [newRootShape, newFocusPath] = setDirection(
+              rootShape,
+              focusPath,
+              "vertical"
+            );
+            setRootShape(newRootShape);
+            setFocusPath(newFocusPath);
+            setHotKeyMode("default");
+            break;
+          }
+          case "h": {
+            //change the current focused container to horizontal 1D
+            const [newRootShape, newFocusPath] = setDirection(
+              rootShape,
+              focusPath,
+              "horizontal"
+            );
+            setRootShape(newRootShape);
+            setFocusPath(newFocusPath);
+            setHotKeyMode("default");
+            break;
+          }
+          default:
+            setHotKeyMode("default");
+        }
+
       case "trackSize":
         switch (e.key) {
           ///////////////////////////////
@@ -85,10 +119,8 @@ export function Root(props: Props) {
           // Focus move hot keys
           ///////////////////////////////
           case "h":
-            setFocusPath(focusPrev(focusPath, rootShape));
             break;
           case "l":
-            setFocusPath(focusNext(focusPath, rootShape));
             break;
         }
 
@@ -99,6 +131,9 @@ export function Root(props: Props) {
           ///////////////////////////////
           case "t":
             setHotKeyMode("trackSize");
+            break;
+          case "d":
+            setHotKeyMode("direction");
             break;
           case "Shift":
             setHotKeyMode("select");
@@ -139,12 +174,6 @@ export function Root(props: Props) {
             setFocusPath(newFocusPath);
             break;
           }
-          case "v":
-            //change the current focused container to vertical 1D
-            break;
-          case "h":
-            //change the current focused container to horizontal 1D
-            break;
           case "1":
           case "2":
           case "3":
