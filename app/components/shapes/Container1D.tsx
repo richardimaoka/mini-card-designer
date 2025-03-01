@@ -9,6 +9,7 @@ import {
   pathMatched,
   Shape,
 } from "./definitions/shapes";
+import { Empty } from "./Empty";
 
 type InnerSwitchProps = Shape & FocusProps & NestProps;
 
@@ -18,6 +19,8 @@ export function InnerSwitch(props: InnerSwitchProps): JSX.Element {
   switch (props.shapeType) {
     case "circle":
       return <Circle {...props} />;
+    case "empty":
+      return <Empty {...props} />;
     case "container1D":
       switch (props.direction) {
         case "horizontal":

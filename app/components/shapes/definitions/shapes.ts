@@ -312,7 +312,7 @@ export function changeContainer1DSize(
       newShape.children[i] = copyShape(shape.children[i]);
       newShape.trackSizes.push(shape.trackSizes[i]);
     } else {
-      newShape.children[i] = createCircle(16);
+      newShape.children[i] = createEmptyShape();
       newShape.trackSizes.push("auto");
     }
   }
@@ -497,6 +497,19 @@ export function setTrackSizeAt(
     case "empty":
       return [rootShape, focusPath]; // return unchanged rootShape
   }
+}
+
+/////////////////////////////////////////////////////////////////
+// Empty functions
+/////////////////////////////////////////////////////////////////
+
+export function createEmptyShape(): EmptyShape {
+  const id = crypto.randomUUID();
+
+  return {
+    shapeType: "empty",
+    id: id,
+  };
 }
 
 /////////////////////////////////////////////////////////////////
