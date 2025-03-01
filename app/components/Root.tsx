@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
-import styles from "./Root.module.css";
 import { Container1DHorizontal } from "./shapes/Container1D";
 import {
   changeChildrenSize,
-  Contanier1DShape,
-  copyContainer1D,
-  copyShape,
-  createCircle as emptyShape,
   createContainer1D,
+  createEmptyShape,
   focusInside,
   focusNext,
   focusOutside,
@@ -17,7 +13,6 @@ import {
   Shape,
   unwrap,
   wrapIntoContainer1D,
-  createEmptyShape,
 } from "./shapes/definitions/shapes";
 
 type Props = {};

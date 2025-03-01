@@ -1,3 +1,5 @@
+import { Container1DHorizontal } from "../Container1D";
+
 export type Path = string[];
 
 export type TrackSize = "auto" | "1fr";
@@ -264,6 +266,10 @@ export function createContainer1D(
 
     children: children,
   };
+}
+
+export function isContainer1D(shape: Shape): shape is Contanier1DShape {
+  return shape.shapeType === "container1D";
 }
 
 export function updateContainerWidth(
