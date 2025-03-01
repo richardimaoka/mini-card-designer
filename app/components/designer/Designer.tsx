@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import styles from "./Designer.module.css";
+import { SourceCodeViewer } from "./code/SourceCodeViewer";
 import { Grid1D } from "./shapes/Grid1D";
 import {
   changeChildrenSize,
-  createGrid1D,
   createEmptyShape,
-  findRightPath,
+  createGrid1D,
   focusInside,
   focusNext,
   focusOutside,
@@ -16,13 +17,12 @@ import {
   unwrap,
   wrapIntoGrid1D,
 } from "./shapes/definitions/shapes";
-import path from "path";
 
 type Props = {};
 
 type HotKeyMode = "default" | "trackSize" | "select" | "direction";
 
-export function Root(props: Props) {
+export function Designer(props: Props) {
   const emptyShape = createEmptyShape();
   const grid = createGrid1D("horizontal", "white", [emptyShape]);
   grid.widthPx = 600;
@@ -211,12 +211,15 @@ export function Root(props: Props) {
   switch (rootShape.shapeType) {
     case "grid1D":
       return (
-        <Grid1D
-          {...rootShape}
-          parentPath={[]}
-          focusPath={focusPath}
-          nestLevel={1}
-        />
+        <div className={styles.component}>
+          <Grid1D
+            {...rootShape}
+            parentPath={[]}
+            focusPath={focusPath}
+            nestLevel={1}
+          />
+          <SourceCodeViewer rootShape={rootShape} />
+        </div>
       );
     default:
       return <></>;

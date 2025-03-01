@@ -1,0 +1,9 @@
+.component {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.component > *:nth-child(1) {
+  justify-self: center;
+  align-self: center;
+}

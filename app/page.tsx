@@ -1,12 +1,13 @@
 "use client";
 
-import { Root } from "./components/designer/Root";
+import { SourceCodeViewer } from "./components/designer/code/SourceCodeViewer";
+import { Designer } from "./components/designer/Designer";
 import styles from "./page.module.css";
 
 export default function Page() {
   return (
     <div className={styles.component}>
-      <Root />
+      <Designer />
     </div>
   );
 }
