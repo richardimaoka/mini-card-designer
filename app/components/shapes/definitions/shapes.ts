@@ -198,12 +198,16 @@ export function focusNext(path: Path, rootShape: Shape): Path {
         const next = parent.children[currentIndex + 1];
         return [...getParentPath(path), next.id];
       } else {
-        return path; // no more next child, return the unchanged path
+        return getParentPath(path);
       }
     case "circle":
-      return path; // parent is not container (impossible?) return the unchanged path
+      throw new Error(
+        "focusPrev: parent is not a container - this must be impossible!"
+      );
     case "empty":
-      return path; // parent is not container (impossible?) return the unchanged path
+      throw new Error(
+        "focusPrev: parent is not a container - this must be impossible!"
+      );
   }
 }
 
@@ -226,12 +230,16 @@ export function focusPrev(path: Path, rootShape: Shape): Path {
         const prev = parent.children[currentIndex - 1];
         return [...getParentPath(path), prev.id];
       } else {
-        return path; // no prev child, return the unchanged path
+        return getParentPath(path);
       }
     case "circle":
-      return path; // parent is not container (impossible?) return the unchanged path
+      throw new Error(
+        "focusPrev: parent is not a container - this must be impossible!"
+      );
     case "empty":
-      return path; // parent is not container (impossible?) return the unchanged path
+      throw new Error(
+        "focusPrev: parent is not a container - this must be impossible!"
+      );
   }
 }
 

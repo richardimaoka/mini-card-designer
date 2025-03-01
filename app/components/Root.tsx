@@ -29,6 +29,10 @@ export function Root(props: Props) {
   const [hotKeyMode, setHotKeyMode] = useState<HotKeyMode>("default");
   const [selection, setSelection] = useState<Path[]>([]);
 
+  // const focused = ...
+  // const focusParent: Container1D | null = ...
+  // const focusIndex
+
   // argument `e` is NOT React.KeyboardEvent as it's passed to document.addEventListner
   function onKeyUp(e: KeyboardEvent) {
     if (hotKeyMode === "select") {
