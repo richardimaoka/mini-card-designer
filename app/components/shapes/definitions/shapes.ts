@@ -31,11 +31,17 @@ export type Contanier1DShape = {
   children: Shape[];
 };
 
+export type EmptyShape = {
+  shapeType: "empty";
+  id: string;
+};
+
 export type CircleShape = {
   shapeType: "circle";
   id: string;
   radiusPx: number;
 };
+
 // type Square = {};
 
 // type Square = {};
@@ -45,7 +51,7 @@ export type CircleShape = {
 // type List
 
 export type Shape = StandaloneShape | ContainerShape;
-export type StandaloneShape = CircleShape;
+export type StandaloneShape = CircleShape | EmptyShape;
 export type ContainerShape = Contanier1DShape;
 
 export type FocusProps = {
@@ -158,6 +164,8 @@ export function focusInside(path: Path, rootShape: Shape): Path {
       return [...path, childInside.id];
     case "circle":
       return path;
+    case "empty":
+      return path;
   }
 }
 
@@ -192,6 +200,8 @@ export function focusNext(path: Path, rootShape: Shape): Path {
       }
     case "circle":
       return path; // parent is not container (impossible?) return the unchanged path
+    case "empty":
+      return path; // parent is not container (impossible?) return the unchanged path
   }
 }
 
@@ -217,6 +227,8 @@ export function focusPrev(path: Path, rootShape: Shape): Path {
         return path; // no prev child, return the unchanged path
       }
     case "circle":
+      return path; // parent is not container (impossible?) return the unchanged path
+    case "empty":
       return path; // parent is not container (impossible?) return the unchanged path
   }
 }
@@ -369,6 +381,7 @@ export function setTrackSizes(
 // Root shape functions
 /////////////////////////////////////////////////////////////////
 
+// make it container1D specific, and the root component have context-specific hotkey branches?
 export function replaceShape(
   rootShape: Shape,
   focusPath: Path,
@@ -399,6 +412,8 @@ export function replaceShape(
       }
     case "circle":
       return [rootShape, focusPath]; // return unchanged rootShape
+    case "empty":
+      return [rootShape, focusPath]; // return unchanged rootShape
   }
 }
 
@@ -415,6 +430,7 @@ export function wrapIntoContainer1D(
   return replaceShape(rootShape, focusPath, wrapped);
 }
 
+// make it container1D specific, and the root component have context-specific hotkey branches?
 export function unwrap(rootShape: Shape, focusPath: Path): [Shape, Path] {
   const target = findShape(rootShape, focusPath);
   if (!target) {
@@ -431,9 +447,12 @@ export function unwrap(rootShape: Shape, focusPath: Path): [Shape, Path] {
       }
     case "circle":
       return [rootShape, focusPath]; // return unchanged rootShape
+    case "empty":
+      return [rootShape, focusPath]; // return unchanged rootShape
   }
 }
 
+// make it container1D specific, and the root component have context-specific hotkey branches?
 export function changeChildrenSize(
   rootShape: Shape,
   focusPath: Path,
@@ -450,9 +469,12 @@ export function changeChildrenSize(
       return replaceShape(rootShape, focusPath, newTraget);
     case "circle":
       return [rootShape, focusPath]; // return unchanged rootShape
+    case "empty":
+      return [rootShape, focusPath]; // return unchanged rootShape
   }
 }
 
+// make it container1D specific, and the root component have context-specific hotkey branches?
 export function setTrackSizeAt(
   rootShape: Shape,
   focusPath: Path,
@@ -471,6 +493,8 @@ export function setTrackSizeAt(
       const [newRootShape] = replaceShape(rootShape, parentPath, newParent);
       return [newRootShape, focusPath];
     case "circle":
+      return [rootShape, focusPath]; // return unchanged rootShape
+    case "empty":
       return [rootShape, focusPath]; // return unchanged rootShape
   }
 }
@@ -496,6 +520,8 @@ export function createCircle(radiusPx: number): CircleShape {
 export function copyShape<S extends Shape>(s: S): S {
   switch (s.shapeType) {
     case "circle":
+      return { ...s };
+    case "empty":
       return { ...s };
     case "container1D":
       return {
