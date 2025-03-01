@@ -44,7 +44,7 @@ export type CircleShape = {
 // type Card2d
 // type List
 
-export type Shape = CircleShape | Contanier1DShape;
+export type Shape = StandaloneShape | ContainerShape;
 export type StandaloneShape = CircleShape;
 export type ContainerShape = Contanier1DShape;
 
