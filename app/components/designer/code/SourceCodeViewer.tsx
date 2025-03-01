@@ -62,14 +62,10 @@ type Props = {
 };
 
 export function SourceCodeViewer(props: Props) {
-  function childrenString(
-    shape: Shape,
-    indentLevel: number,
-    indentBeginning: boolean = false
-  ): string {
+  function childrenString(shape: Shape, indentLevel: number): string {
     switch (shape.shapeType) {
       case "grid1D":
-        return grid1D(shape, indentLevel, indentBeginning).join("\n");
+        return grid1D(shape, indentLevel, false).join("\n");
       default:
         return "unavailable";
     }

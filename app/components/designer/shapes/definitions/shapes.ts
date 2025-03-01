@@ -179,39 +179,7 @@ export function focusOutside(path: Path, shape: Shape): Path {
   }
 }
 
-export function findRightPath(path: Path, rootShape: Shape): Path | undefined {
-  if (path.length <= 1) {
-    return undefined; // path is empty or the root. there is no path on the right
-  }
-
-  const parent = findShape(rootShape, getParentPath(path));
-  if (!parent) {
-    return undefined; // no parent found
-  }
-
-  switch (parent.shapeType) {
-    case "grid1D":
-      const childId = path[path.length - 1];
-      const childIndex = parent.children.findIndex((c) => c.id === childId);
-
-      if (childIndex < parent.children.length - 1) {
-        const next = parent.children[childIndex + 1];
-        return [...getParentPath(path), next.id];
-      } else {
-        return undefined;
-      }
-    case "circle":
-      throw new Error(
-        "toRight: parent is not a grid - this must be impossible!"
-      );
-    case "empty":
-      throw new Error(
-        "toRight: parent is not a grid - this must be impossible!"
-      );
-  }
-}
-
-export function focusNext(path: Path, rootShape: Shape): Path {
+export function moveFocusLeft(path: Path, rootShape: Shape): Path {
   if (path.length <= 1) {
     return path; // path is empty or the root. return the unchanged path
   }
@@ -223,14 +191,21 @@ export function focusNext(path: Path, rootShape: Shape): Path {
 
   switch (parent.shapeType) {
     case "grid1D":
-      const pathEnd = path[path.length - 1];
-      const currentIndex = parent.children.findIndex((c) => c.id === pathEnd);
+      switch (parent.direction) {
+        case "horizontal":
+          const pathEnd = path[path.length - 1];
+          const currentIndex = parent.children.findIndex(
+            (c) => c.id === pathEnd
+          );
 
-      if (currentIndex < parent.children.length - 1) {
-        const next = parent.children[currentIndex + 1];
-        return [...getParentPath(path), next.id];
-      } else {
-        return getParentPath(path);
+          if (0 < currentIndex) {
+            const prev = parent.children[currentIndex - 1];
+            return [...getParentPath(path), prev.id];
+          } else {
+            return getParentPath(path);
+          }
+        case "vertical":
+          return getParentPath(path); // direction is vertical, return parent
       }
     case "circle":
       throw new Error(
@@ -243,39 +218,7 @@ export function focusNext(path: Path, rootShape: Shape): Path {
   }
 }
 
-export function findLeftPath(path: Path, rootShape: Shape): Path | undefined {
-  if (path.length <= 1) {
-    return undefined; // path is empty or the root. there is no path on the left
-  }
-
-  const parent = findShape(rootShape, getParentPath(path));
-  if (!parent) {
-    return undefined; // no parent found
-  }
-
-  switch (parent.shapeType) {
-    case "grid1D":
-      const childId = path[path.length - 1];
-      const childIndex = parent.children.findIndex((c) => c.id === childId);
-
-      if (0 < childIndex) {
-        const prev = parent.children[childIndex - 1];
-        return [...getParentPath(path), prev.id];
-      } else {
-        return getParentPath(path);
-      }
-    case "circle":
-      throw new Error(
-        "toRight: parent is not a grid - this must be impossible!"
-      );
-    case "empty":
-      throw new Error(
-        "toRight: parent is not a grid - this must be impossible!"
-      );
-  }
-}
-
-export function focusPrev(path: Path, rootShape: Shape): Path {
+export function moveFocusRight(path: Path, rootShape: Shape): Path {
   if (path.length <= 1) {
     return path; // path is empty or the root. return the unchanged path
   }
@@ -287,14 +230,21 @@ export function focusPrev(path: Path, rootShape: Shape): Path {
 
   switch (parent.shapeType) {
     case "grid1D":
-      const pathEnd = path[path.length - 1];
-      const currentIndex = parent.children.findIndex((c) => c.id === pathEnd);
+      switch (parent.direction) {
+        case "horizontal":
+          const pathEnd = path[path.length - 1];
+          const currentIndex = parent.children.findIndex(
+            (c) => c.id === pathEnd
+          );
 
-      if (0 < currentIndex) {
-        const prev = parent.children[currentIndex - 1];
-        return [...getParentPath(path), prev.id];
-      } else {
-        return getParentPath(path);
+          if (currentIndex < parent.children.length - 1) {
+            const next = parent.children[currentIndex + 1];
+            return [...getParentPath(path), next.id];
+          } else {
+            return getParentPath(path);
+          }
+        case "vertical":
+          return getParentPath(path); // direction is vertical, return parent
       }
     case "circle":
       throw new Error(
@@ -307,6 +257,83 @@ export function focusPrev(path: Path, rootShape: Shape): Path {
   }
 }
 
+export function moveFocusUp(path: Path, rootShape: Shape): Path {
+  if (path.length <= 1) {
+    return path; // path is empty or the root. return the unchanged path
+  }
+
+  const parent = findShape(rootShape, getParentPath(path));
+  if (!parent) {
+    return path; // not found, return the unchanged path
+  }
+
+  switch (parent.shapeType) {
+    case "grid1D":
+      switch (parent.direction) {
+        case "vertical":
+          const pathEnd = path[path.length - 1];
+          const currentIndex = parent.children.findIndex(
+            (c) => c.id === pathEnd
+          );
+
+          if (0 < currentIndex) {
+            const prev = parent.children[currentIndex - 1];
+            return [...getParentPath(path), prev.id];
+          } else {
+            return getParentPath(path);
+          }
+        case "horizontal":
+          return getParentPath(path); // direction is vertical, return parent
+      }
+    case "circle":
+      throw new Error(
+        "focusPrev: parent is not a grid - this must be impossible!"
+      );
+    case "empty":
+      throw new Error(
+        "focusPrev: parent is not a grid - this must be impossible!"
+      );
+  }
+}
+
+export function moveFocusDown(path: Path, rootShape: Shape): Path {
+  if (path.length <= 1) {
+    return path; // path is empty or the root. return the unchanged path
+  }
+
+  const parent = findShape(rootShape, getParentPath(path));
+  if (!parent) {
+    return path; // not found, return the unchanged path
+  }
+
+  switch (parent.shapeType) {
+    case "grid1D":
+      switch (parent.direction) {
+        case "vertical":
+          const pathEnd = path[path.length - 1];
+          const currentIndex = parent.children.findIndex(
+            (c) => c.id === pathEnd
+          );
+
+          if (currentIndex < parent.children.length - 1) {
+            const next = parent.children[currentIndex + 1];
+            return [...getParentPath(path), next.id];
+          } else {
+            return getParentPath(path);
+          }
+        case "horizontal":
+          return getParentPath(path); // direction is vertical, return parent
+      }
+    case "circle":
+      throw new Error(
+        "focusPrev: parent is not a grid - this must be impossible!"
+      );
+    case "empty":
+      throw new Error(
+        "focusPrev: parent is not a grid - this must be impossible!"
+      );
+  }
+}
 /////////////////////////////////////////////////////////////////
 // Grid functions
 /////////////////////////////////////////////////////////////////

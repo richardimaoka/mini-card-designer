@@ -7,15 +7,17 @@ import {
   createEmptyShape,
   createGrid1D,
   focusInside,
-  focusNext,
+  moveFocusRight,
   focusOutside,
-  focusPrev,
+  moveFocusLeft,
   Path,
   setDirection,
   setTrackSizeAt,
   Shape,
   unwrap,
   wrapIntoGrid1D,
+  moveFocusDown,
+  moveFocusUp,
 } from "./shapes/definitions/shapes";
 
 type Props = {};
@@ -149,10 +151,16 @@ export function Designer(props: Props) {
             setFocusPath(focusOutside(focusPath, rootShape));
             break;
           case "h":
-            setFocusPath(focusPrev(focusPath, rootShape));
+            setFocusPath(moveFocusLeft(focusPath, rootShape));
+            break;
+          case "j":
+            setFocusPath(moveFocusDown(focusPath, rootShape));
+            break;
+          case "k":
+            setFocusPath(moveFocusUp(focusPath, rootShape));
             break;
           case "l":
-            setFocusPath(focusNext(focusPath, rootShape));
+            setFocusPath(moveFocusRight(focusPath, rootShape));
             break;
 
           ///////////////////////////////
