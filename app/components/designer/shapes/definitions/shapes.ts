@@ -31,6 +31,8 @@ export type Grid1DShape = {
   backgroundColor?: BgColor;
 
   children: Shape[];
+
+  className?: string;
 };
 
 export type EmptyShape = {
@@ -43,6 +45,9 @@ export type CircleShape = {
   id: string;
   radiusPx: number;
 };
+
+// type TextShape
+// type IconShape
 
 // type Square = {};
 
@@ -86,11 +91,11 @@ function wrap(shape: Shape) {}
 // Path functions
 /////////////////////////////////////////////////////////////////
 
-export function pathAppend(path: Path, pathElement: string) {
+export function pathAppend(path: Path, pathElement: string): Path {
   return [...path, pathElement];
 }
 
-export function pathMatched(path1: Path, path2: Path) {
+export function pathMatched(path1: Path, path2: Path): boolean {
   if (path1.length !== path2.length) {
     // if length is different, early return false
     return false;
@@ -120,8 +125,7 @@ function findShapeRecursive(
     case 2:
       switch (shape.shapeType) {
         case "grid1D":
-          const child = shape.children.find((c) => c.id === remainingPath[1]);
-          return child;
+          return shape.children.find((c) => c.id === remainingPath[1]);
         case "circle":
           return undefined;
       }
@@ -202,10 +206,10 @@ export function moveFocusLeft(path: Path, rootShape: Shape): Path {
             const prev = parent.children[currentIndex - 1];
             return [...getParentPath(path), prev.id];
           } else {
-            return getParentPath(path);
+            return path; // unchanged path
           }
         case "vertical":
-          return getParentPath(path); // direction is vertical, return parent
+          return path; // unchanged path
       }
     case "circle":
       throw new Error(
@@ -241,10 +245,10 @@ export function moveFocusRight(path: Path, rootShape: Shape): Path {
             const next = parent.children[currentIndex + 1];
             return [...getParentPath(path), next.id];
           } else {
-            return getParentPath(path);
+            return path; // unchanged path
           }
         case "vertical":
-          return getParentPath(path); // direction is vertical, return parent
+          return path; // unchanged path
       }
     case "circle":
       throw new Error(
@@ -280,10 +284,10 @@ export function moveFocusUp(path: Path, rootShape: Shape): Path {
             const prev = parent.children[currentIndex - 1];
             return [...getParentPath(path), prev.id];
           } else {
-            return getParentPath(path);
+            return path; // unchanged path
           }
         case "horizontal":
-          return getParentPath(path); // direction is vertical, return parent
+          return path; // unchanged path
       }
     case "circle":
       throw new Error(
@@ -319,10 +323,10 @@ export function moveFocusDown(path: Path, rootShape: Shape): Path {
             const next = parent.children[currentIndex + 1];
             return [...getParentPath(path), next.id];
           } else {
-            return getParentPath(path);
+            return path; // unchanged path
           }
         case "horizontal":
-          return getParentPath(path); // direction is vertical, return parent
+          return path; // unchanged path
       }
     case "circle":
       throw new Error(
