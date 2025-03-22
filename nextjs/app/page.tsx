@@ -4,7 +4,7 @@ import styles from "./page.module.css";
 export default function Page() {
   return (
     <div className={styles.component}>
-      <Grid />
+      <Grid text="tag" />
     </div>
   );
 }

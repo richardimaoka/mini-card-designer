@@ -1,16 +1,18 @@
 import styles from "./Grid.module.css";
-import { Rectangle } from "./Rectangle";
-import { Square } from "./Square";
+import { Text } from "./samples/Text";
 
-type Props = {};
+type Props = {
+  text: string;
+};
 
 export function Grid(props: Props) {
   return (
     <div className={styles.component}>
-      <Square />
+      <Text text={props.text} />
+      {/* <Square />
       <Rectangle />
       <Square />
-      <Square />
+      <Square /> */}
     </div>
   );
 }

@@ -2,8 +2,7 @@
   background-color: white;
 
   display: grid;
-  grid-template-columns: auto auto auto auto;
-  column-gap: 8px;
+  grid-template-columns: auto;
 
   padding-top: 8px;
   padding-bottom: 8px;
